@@ -44,6 +44,8 @@ import javax.swing.filechooser.*;
 			JMenuItem exitProg = new JMenuItem("Exit");
 			archMenu.add(exitProg);
 			
+			mapPanel.setLayout(null);
+			//add(mapPanel);
 			
 			
 			
@@ -63,17 +65,16 @@ import javax.swing.filechooser.*;
 			if (answer == JFileChooser.APPROVE_OPTION){
 				File f = jfc.getSelectedFile();
 				MapImage m = new MapImage(f);
+				m.setPreferredSize(new Dimension(750, 750));
 				add(m);
-				//behöver läggas till JPanel istället
+				setSize(800, 800);
 
 				validate();
 				repaint();
 			}
 		}
-		
-	
-		
-		class newListener implements ActionListener{
+
+		class newListener implements ActionListener{ 
 			public void actionPerformed(ActionEvent a){
 				newMap();
 			}
