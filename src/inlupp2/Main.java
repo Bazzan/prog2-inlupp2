@@ -22,7 +22,8 @@ import javax.swing.filechooser.*;
 	JPanel mapPanel = new JPanel();
 	JPanel categoryPanel = new JPanel();
 	String[]cats = {"Kyrkor", "Portaler", "Skolor", "Skulpturer", "Moskéer", "Butiker"};
-	JList<String> categories = new JList(cats);
+	ArrayList <Category> categories = new ArrayList<Category>();
+	JList<String> categoryList = new JList(cats);
 	
 	
 		Main(){
@@ -81,9 +82,9 @@ import javax.swing.filechooser.*;
 			
 			categoryPanel.setLayout(new BoxLayout(categoryPanel, BoxLayout.Y_AXIS));
 			
-			JScrollPane cScroll = new JScrollPane(categories);
-			categories.setVisibleRowCount(10); 						//Lista över kategorier
-			categories.setFixedCellWidth(75);
+			JScrollPane cScroll = new JScrollPane(categoryList);
+			categoryList.setVisibleRowCount(10); 						//Lista över kategorier
+			categoryList.setFixedCellWidth(75);
 			categoryPanel.add(cScroll);
 
 			
@@ -93,16 +94,18 @@ import javax.swing.filechooser.*;
 			
 			JButton newC = new JButton("New category");
 			categoryPanel.add(newC);
+			newC.addActionListener(new newCListener());
 
 			JButton deleteC = new JButton("Delete category");
 			categoryPanel.add(deleteC);
 			
 			
-			categoryPanel.setPreferredSize(new Dimension(200, 250));
+			categoryPanel.setMaximumSize(new Dimension(150, 250));
 			
-			mapPanel.setPreferredSize(new Dimension(350, 350));
+			mapPanel.setPreferredSize(new Dimension(400, 350));
 			southPanel.add(mapPanel, BorderLayout.WEST);
 			southPanel.add(categoryPanel, BorderLayout.EAST);
+			
 			
 			add(southPanel, BorderLayout.SOUTH);
 			pack();
@@ -130,15 +133,60 @@ import javax.swing.filechooser.*;
 				repaint();
 			}
 		}
+		
+		public void newPlace(){
+			
+		}
 
 		class newListener implements ActionListener{ 
 			public void actionPerformed(ActionEvent a){
 				newMap();
 			}
 		}
-
-
 		
+		class newPlaceListener implements ActionListener{ 
+			public void actionPerformed(ActionEvent a){
+				newPlace();
+			}
+		}
+		
+		
+		/*-------- Kategorilyssnare --------*/
+		
+		class newCListener implements ActionListener{ 
+			public void actionPerformed(ActionEvent a){
+				
+				JLabel l = new JLabel("Name:"); 	//textinput
+				JTextField t = new JTextField(8);
+				JPanel p = new JPanel();
+				p.add(l,BorderLayout.WEST);
+				p.add(t,BorderLayout.WEST);
+				
+				JColorChooser cc = new JColorChooser(); 	//Färgval
+				JPanel ccp = new JPanel();
+				ccp.add(cc, BorderLayout.WEST);
+
+				JPanel form = new JPanel();
+				
+				BorderLayout b= new BorderLayout();
+				//form.add(p, BorderLayout.NORTH);
+				//form.add(c, BorderLayout.SOUTH);
+				
+				form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
+				form.add(p);
+				form.add(ccp);
+				
+				int answer = JOptionPane.showConfirmDialog(null, form, "New category", JOptionPane.OK_CANCEL_OPTION);
+				if (answer==JOptionPane.YES_OPTION){
+					String n=t.getText();
+					Color c = cc.getColor();
+					
+					Category cat = new Category(n, c);
+					categories.add(cat);
+					//måste lägga in namnet i listan och koppla till objektet
+				}
+			}
+		}
 		
 		
 	public static void main(String[] args){
