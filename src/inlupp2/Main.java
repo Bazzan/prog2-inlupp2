@@ -17,10 +17,10 @@ import javax.swing.filechooser.*;
 	Color c = Color.BLUE;
 	Triangle t = new Triangle();
 	JComponent map;
-	JPanel northPanel = new JPanel();
+//	JPanel northPanel = new JPanel();
 	JPanel southPanel = new JPanel();
 	JPanel mapPanel = new JPanel();
-	JPanel categoryPanel = new JPanel();
+//	JPanel categoryPanel = new JPanel();
 	String[]cats = {"Kyrkor", "Portaler", "Skolor", "Skulpturer", "Moskéer", "Butiker"};
 	ArrayList <Category> categories = new ArrayList<Category>();
 	JList<String> categoryList = new JList(cats);
@@ -29,7 +29,9 @@ import javax.swing.filechooser.*;
 		Main(){
 			
 			/* ---------- Arkiv-meny ------------*/
-			setLayout(new FlowLayout());
+			setLayout(new BorderLayout());
+			setSize(850,500);
+			setLocationRelativeTo(null);
 
 			JMenuBar mbar = new JMenuBar();
 			setJMenuBar(mbar);
@@ -54,66 +56,71 @@ import javax.swing.filechooser.*;
 			
 			/* ---------- Panel för skapande och sökande av ställen ------------*/
 			
-			JPanel newPanel = new JPanel();			
+			JPanel northPanel = new JPanel();
 			
 			JLabel newLabel = new JLabel("Ny:");					//Skapa nya ställen. Behöver actionlisteners
 			String[] newString = {"NamedPlace", "DescribedPlace"};
 			JComboBox newBox = new JComboBox(newString);
-			newPanel.add(newLabel);
-			newPanel.add(newBox);
+			northPanel.add(newLabel);
+			northPanel.add(newBox);
 			
 			JTextField searchField = new JTextField("Search", 12);				//Sök efter ställen eller beskrivning, behöver AL
-			newPanel.add(searchField);
+			northPanel.add(searchField);
 			JButton searchButton = new JButton("Search");
-			newPanel.add(searchButton);
+			northPanel.add(searchButton);
 			
 			JButton hideButton = new JButton("Hide places");
-			newPanel.add(hideButton);
+			northPanel.add(hideButton);
 			JButton deletePlaces = new JButton("Delete places");
-			newPanel.add(deletePlaces);
+			northPanel.add(deletePlaces);
 			JButton wihButton = new JButton("What is here?");
-			newPanel.add(wihButton);
+			northPanel.add(wihButton);
 			
-			
-			northPanel.add(newPanel, BorderLayout.WEST);
+
 			add(northPanel, BorderLayout.NORTH);
 			
 			/* ---------- Panel för kategorier ------------*/
-			
-			categoryPanel.setLayout(new BoxLayout(categoryPanel, BoxLayout.Y_AXIS));
-			
+
+			JPanel eastPanel = new JPanel();
+
+			eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
+
+			JLabel categories = new JLabel("Categories");
+			eastPanel.add(categories);
+
 			JScrollPane cScroll = new JScrollPane(categoryList);
 			categoryList.setVisibleRowCount(10); 						//Lista över kategorier
 			categoryList.setFixedCellWidth(75);
-			categoryPanel.add(cScroll);
+			eastPanel.add(cScroll);
 
 			
 
 			JButton hideC = new JButton ("Hide category");		//Knappar
-			categoryPanel.add(hideC);
+			eastPanel.add(hideC);
 			
 			JButton newC = new JButton("New category");
-			categoryPanel.add(newC);
+			eastPanel.add(newC);
 			newC.addActionListener(new newCListener());
 
 			JButton deleteC = new JButton("Delete category");
-			categoryPanel.add(deleteC);
+			eastPanel.add(deleteC);
 			
 			
-			categoryPanel.setMaximumSize(new Dimension(150, 250));
+//			eastPanel.setMaximumSize(new Dimension(150, 250));
 			
-			mapPanel.setPreferredSize(new Dimension(400, 350));
-			southPanel.add(mapPanel, BorderLayout.WEST);
-			southPanel.add(categoryPanel, BorderLayout.EAST);
-			
-			
-			add(southPanel, BorderLayout.SOUTH);
-			pack();
+//			mapPanel.setPreferredSize(new Dimension(400, 350));
+//			southPanel.add(mapPanel, BorderLayout.WEST);
+//			southPanel.add(eastPanel, BorderLayout.EAST);
+
+
+//			add(southPanel, BorderLayout.SOUTH);
+//			pack();
 
 			//setSize(850, 500);
+
+			add(eastPanel, BorderLayout.EAST);
 			setVisible(true);
-			
-			
+
 		}
 		
 		public void newMap(){		//Öppnar bildfil för ny karta
