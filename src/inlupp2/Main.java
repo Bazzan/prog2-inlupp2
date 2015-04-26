@@ -29,6 +29,7 @@ class Main extends JFrame {
         setLayout(new BorderLayout());
         setSize(850, 500);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JMenuBar mbar = new JMenuBar();
         setJMenuBar(mbar);
@@ -75,7 +76,7 @@ class Main extends JFrame {
 
 
         add(northPanel, BorderLayout.NORTH);
-			
+
 			/* ---------- Panel för kategorier ------------*/
 
         JPanel eastPanel = new JPanel();
@@ -128,13 +129,13 @@ class Main extends JFrame {
         if (answer == JFileChooser.APPROVE_OPTION) {
             File f = jfc.getSelectedFile();
             MapImage m = new MapImage(f);
-            Dimension imgSize = new Dimension(m.getWidth(),m.getHeight());
+            Dimension imgSize = new Dimension(m.getWidth(), m.getHeight());
             m.setPreferredSize(imgSize);
             add(m, BorderLayout.CENTER);
             pack();
             setVisible(true);
-//				validate();
-//				repaint();
+            validate();
+            repaint();
         }
     }
 
