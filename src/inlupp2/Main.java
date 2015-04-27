@@ -2,25 +2,32 @@ package inlupp2;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class Main extends JFrame {
-    int x = 10;
+    int x = 10;						//testattribut
     int y = 80;
     Color c = Color.BLUE;
-    Triangle t = new Triangle();
+    Category cA = new Category("Test", Color.CYAN);
+    //Triangle t = new Triangle();	
     JComponent map;
-    //	JPanel northPanel = new JPanel();
-//    JPanel southPanel = new JPanel();
-//    JPanel mapPanel = new JPanel();
-    //	JPanel categoryPanel = new JPanel();
+    
+    HashMap<String, NamedPlace> h = new HashMap<>();
+    HashMap<Position, NamedPlace> h2 = new HashMap<>();
+    
     String[] cats = {"Kyrkor", "Portaler", "Skolor", "Skulpturer", "Moskéer", "Butiker"};
     ArrayList<Category> categories = new ArrayList<Category>();
     JList<String> categoryList = new JList(cats);
+    
+    JPanel jp = new JPanel();
 
 
     Main() {
@@ -59,6 +66,14 @@ class Main extends JFrame {
         JLabel newLabel = new JLabel("Ny:");                    //Skapa nya ställen. Behöver actionlisteners
         String[] newString = {"NamedPlace", "DescribedPlace"};
         JComboBox newBox = new JComboBox(newString);
+        newBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent a) {
+            	 JComboBox comboBox =(JComboBox) a.getSource();
+              	 Object selected = comboBox.getSelectedItem();
+            	 newPlace(selected.toString());
+            	
+           }});
+        
         northPanel.add(newLabel);
         northPanel.add(newBox);
 
@@ -102,21 +117,10 @@ class Main extends JFrame {
         JButton deleteC = new JButton("Delete category");
         eastPanel.add(deleteC);
 
-
-//			eastPanel.setMaximumSize(new Dimension(150, 250));
-
-//			mapPanel.setPreferredSize(new Dimension(400, 350));
-//			southPanel.add(mapPanel, BorderLayout.WEST);
-//			southPanel.add(eastPanel, BorderLayout.EAST);
-
-
-//			add(southPanel, BorderLayout.SOUTH);
-//			pack();
-
-        //setSize(850, 500);
-
         add(eastPanel, BorderLayout.EAST);
         setVisible(true);
+        
+        
 
     }
 
@@ -130,7 +134,7 @@ class Main extends JFrame {
             File f = jfc.getSelectedFile();
             Image img = Toolkit.getDefaultToolkit().getImage(f.getAbsolutePath());
             JLabel jl = new JLabel();
-            JPanel jp = new JPanel();
+            
             jl.setIcon(new ImageIcon(img));
             jp.add(jl);
             add(jp, BorderLayout.CENTER);
@@ -142,8 +146,50 @@ class Main extends JFrame {
         }
     }
 
-    public void newPlace() {
+    public void newPlace(final String type) {
+    	 
+    	jp.addMouseListener(new MouseListener(){
+        	public void mousePressed(MouseEvent e){}
+        	
+        	public void mouseReleased(MouseEvent e){}
+        	
+        	public void mouseEntered(MouseEvent e){
+        		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));}
+        	
+        	public void mouseExited(MouseEvent e){
+        		setCursor(Cursor.getDefaultCursor());
+        	}
+        	
+        	public void mouseClicked(MouseEvent e){
+        		System.out.println("Klickat");
+        		Position p = new Position(e.getX(), e.getY());
+        		String name;
+              	if(type.equals("NamedPlace")){
+              		name=JOptionPane.showInputDialog("Namn:");	//skapa ny namedPlace
+              		NamedPlace n = new NamedPlace(name);
+              		h.put(name, n);
+              		h2.put(p, n);
+              		//Här måste vi lägga in i kategori eller liknande, samt måla upp en triangel
+              	}
+              	else if (type.toString().equals("DescribedPlace")){
+              																	//skapa ny describedPlace
+              	}
+              	setCursor(Cursor.getDefaultCursor());
+              	jp.removeMouseListener(this);
+        	}
+        });
+     	
+      	
 
+    }
+    
+    public void drawTriangle(int x, int y){
+    	/*Triangle t = new Triangle(x, y);
+    	jp.add(t);
+    	jp.validate();
+    	jp.repaint();
+    	 System.out.println(x + " och " + y);*/
+    	 
     }
 
     class newListener implements ActionListener {
@@ -152,13 +198,14 @@ class Main extends JFrame {
         }
     }
 
-    class newPlaceListener implements ActionListener {
+    
+    /*---------- PlatsLyssnare -----------------*/
+    class boxListen implements ActionListener {
         public void actionPerformed(ActionEvent a) {
-            newPlace();
+        	
         }
-    }
-		
-		
+       }
+    
 		/*-------- Kategorilyssnare --------*/
 
     class newCListener implements ActionListener {
@@ -196,6 +243,7 @@ class Main extends JFrame {
         }
     }
 
+    
 
     public static void main(String[] args) {
         new Main();

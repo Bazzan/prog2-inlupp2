@@ -1,6 +1,6 @@
 package inlupp2;
 
-public class DescribedPlace extends NamedPlace{
+public class DescribedPlace extends Place{
 	
 	private String description;
 	
