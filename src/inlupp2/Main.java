@@ -15,8 +15,8 @@ class Main extends JFrame {
     Triangle t = new Triangle();
     JComponent map;
     //	JPanel northPanel = new JPanel();
-    JPanel southPanel = new JPanel();
-    JPanel mapPanel = new JPanel();
+//    JPanel southPanel = new JPanel();
+//    JPanel mapPanel = new JPanel();
     //	JPanel categoryPanel = new JPanel();
     String[] cats = {"Kyrkor", "Portaler", "Skolor", "Skulpturer", "Moskéer", "Butiker"};
     ArrayList<Category> categories = new ArrayList<Category>();
@@ -128,14 +128,17 @@ class Main extends JFrame {
         int answer = jfc.showOpenDialog(null);
         if (answer == JFileChooser.APPROVE_OPTION) {
             File f = jfc.getSelectedFile();
-            MapImage m = new MapImage(f);
-            Dimension imgSize = new Dimension(m.getWidth(), m.getHeight());
-            m.setPreferredSize(imgSize);
-            add(m, BorderLayout.CENTER);
+            Image img = Toolkit.getDefaultToolkit().getImage(f.getAbsolutePath());
+            JLabel jl = new JLabel();
+            JPanel jp = new JPanel();
+            jl.setIcon(new ImageIcon(img));
+            jp.add(jl);
+            add(jp, BorderLayout.CENTER);
             pack();
             setVisible(true);
             validate();
             repaint();
+            setLocationRelativeTo(null);
         }
     }
 
