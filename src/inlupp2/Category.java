@@ -7,14 +7,14 @@ public class Category {
 	
 	private String name;
 	private Color color;
-	private ArrayList<NamedPlace> places = new ArrayList<NamedPlace>();
+	private ArrayList<Place> places = new ArrayList<Place>();
 	
 	public Category(String name, Color color){
 		this.name=name;
 		this.color=color;
 	}
 	
-	public void addPlace(NamedPlace n){
+	public void addPlace(Place n){
 		places.add(n);
 	}
 	

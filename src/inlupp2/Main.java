@@ -11,26 +11,36 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.DefaultListModel;
 
 class Main extends JFrame {
     int x = 10;						//testattribut
     int y = 80;
     Color c = Color.BLUE;
-    Category cA = new Category("Test", Color.CYAN);
+    Category cA = new Category("Kyrkor", Color.CYAN);
+    ArrayList<Category> catArr= new ArrayList<Category>();
+    
     //Triangle t = new Triangle();	
     JComponent map;
     
     HashMap<String, NamedPlace> h = new HashMap<>();
     HashMap<Position, NamedPlace> h2 = new HashMap<>();
     
-    String[] cats = {"Kyrkor", "Portaler", "Skolor", "Skulpturer", "Moskéer", "Butiker"};
+
+    DefaultListModel model = new DefaultListModel();
     ArrayList<Category> categories = new ArrayList<Category>();
-    JList<String> categoryList = new JList(cats);
+    JList<String> categoryList = new JList(model);
     
     JPanel jp = new JPanel();
 
 
     Main() {
+    	catArr.add(cA); //testkategori
+    	String[] cats = {"Kyrkor", "Portaler", "Skolor", "Skulpturer", "Moskéer", "Butiker"};
+    	for (int i=0; i<cats.length; i++){
+    		model.add(i, cats[i]);
+    	}
+
 
 			/* ---------- Arkiv-meny ------------*/
         setLayout(new BorderLayout());
@@ -148,6 +158,7 @@ class Main extends JFrame {
 
     public void newPlace(final String type) {
     	 
+    	System.out.println(type);
     	jp.addMouseListener(new MouseListener(){
         	public void mousePressed(MouseEvent e){}
         	
@@ -169,6 +180,10 @@ class Main extends JFrame {
               		NamedPlace n = new NamedPlace(name);
               		h.put(name, n);
               		h2.put(p, n);
+              		if (categoryList.getSelectedValue()!=null){     //Förutsätter att index är samma för bägge
+              			catArr.get(categoryList.getSelectedIndex()).addPlace(n);
+              			System.out.println("Hittade categoryList");
+              		}
               		//Här måste vi lägga in i kategori eller liknande, samt måla upp en triangel
               	}
               	else if (type.toString().equals("DescribedPlace")){
@@ -238,6 +253,7 @@ class Main extends JFrame {
 
                 Category cat = new Category(n, c);
                 categories.add(cat);
+                model.add(model.size(), n);
                 //måste lägga in namnet i listan och koppla till objektet
             }
         }
