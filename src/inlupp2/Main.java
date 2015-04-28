@@ -23,8 +23,8 @@ class Main extends JFrame {
     //Triangle t = new Triangle();	
     JComponent map;
     
-    HashMap<String, NamedPlace> h = new HashMap<>();
-    HashMap<Position, NamedPlace> h2 = new HashMap<>();
+    HashMap<String, Place> h = new HashMap<>();
+    HashMap<Position, Place> h2 = new HashMap<>();
     
 
     DefaultListModel model = new DefaultListModel();
@@ -187,7 +187,28 @@ class Main extends JFrame {
               		//Här måste vi lägga in i kategori eller liknande, samt måla upp en triangel
               	}
               	else if (type.toString().equals("DescribedPlace")){
-              																	//skapa ny describedPlace
+              		JPanel dp = new JPanel();
+              		JLabel nl = new JLabel("Namn:");
+              		JTextField nt = new JTextField(8);
+              		JLabel dl = new JLabel("Beskrivning:");
+              		JTextField dt = new JTextField(10);
+              		dp.add(nl);
+              		dp.add(nt);
+              		dp.add(dl);
+              		dp.add(dt);
+              		
+              		int result=JOptionPane.showConfirmDialog(null, dp, "", JOptionPane.OK_CANCEL_OPTION);
+              		
+              		if (result == JOptionPane.OK_OPTION){
+              			name=nt.getText();
+              			DescribedPlace d = new DescribedPlace(name, dt.getText());
+              			h.put(name, d);
+              			h2.put(p, d);
+              			if (categoryList.getSelectedValue()!=null){     //Förutsätter att index är samma för bägge
+                  			catArr.get(categoryList.getSelectedIndex()).addPlace(d);
+                  			System.out.println("Hittade categoryList d");
+                  		}
+              		}//skapa ny describedPlace
               	}
               	setCursor(Cursor.getDefaultCursor());
               	jp.removeMouseListener(this);
