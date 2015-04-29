@@ -12,9 +12,6 @@ public class MapImage extends JPanel {
     public MapImage(File f) {
     	
     	i = new ImageIcon(f.getAbsolutePath());
-    	
-       /* Toolkit tk = Toolkit.getDefaultToolkit();
-        i = Toolkit.getDefaultToolkit().getImage(f.getAbsolutePath());*/
      
     }
 
@@ -23,11 +20,11 @@ public class MapImage extends JPanel {
         g.drawImage(i.getImage(), 0, 0, this);
     }
 
-   /* public int getWidth() {
-        return i.getImage.getWidth(null);
+    public int getWidth() {
+        return i.getImage().getWidth(null);
     }
 
     public int getHeight() {
-        return i.getHeight(null);
-    }*/
+        return i.getImage().getHeight(null);
+    }
 }

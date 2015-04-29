@@ -167,14 +167,7 @@ class Main extends JFrame {
             File f = jfc.getSelectedFile();
             
             m = new MapImage(f);
-
-            /*
-            JLabel jl = new JLabel();
-            jl.add(t1);
-            jl.setIcon(new ImageIcon(img));
-            jl.add(t1);
-            
-            jp.add(jl);*/
+            m.setPreferredSize(new Dimension(m.getWidth(),m.getHeight()));
             m.setLayout(null);
             add(m, BorderLayout.CENTER);
             pack();
