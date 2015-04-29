@@ -6,6 +6,13 @@ import java.awt.*;
 public class Triangle extends JComponent {
 	Position p;
 	Color c;
+	boolean visible = true;
+
+	public void isVisible(boolean v){
+		visible = v;
+		validate();
+		repaint();
+	}
 	
 	public Triangle(Position p, Color c){
 		this.p=p;
@@ -24,11 +31,14 @@ public class Triangle extends JComponent {
 		super.paintComponent(g);
 		int[] xP={0, 20, 40};
 		int[] yP={0, 40, 0};
-		
-		g.setColor(c);
-		//g.fillRect(0,0,getWidth(), getHeight());
-		g.fillPolygon(xP, yP, 3);
-		
+		if (visible) {
+
+			g.setColor(c);
+			//g.fillRect(0,0,getWidth(), getHeight());
+			g.fillPolygon(xP, yP, 3);
+		} else {
+
+		}
 	}
 	
 	/*public void setPos(Position p){

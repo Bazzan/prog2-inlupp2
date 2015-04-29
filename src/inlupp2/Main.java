@@ -135,6 +135,16 @@ class Main extends JFrame {
 
         JButton hideC = new JButton("Hide category");        //Knappar
         eastPanel.add(hideC);
+        hideC.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int i = categoryList.getSelectedIndex();
+
+                catArr.get(i).setVisible(false);
+                validate();
+                repaint();
+            }
+        });
 
         JButton newC = new JButton("New category");
         eastPanel.add(newC);
@@ -250,10 +260,6 @@ class Main extends JFrame {
                         h2.put(p, d);
                         d.setVisible(true);
                         m.add(d.getTriangle());
-                        Triangle t = new Triangle(p, c);
-                       // t.setPos(p);
-                       // t.setCol(c);
-                        m.add(t);
 
                         d.setVisible(true);
                         m.validate();

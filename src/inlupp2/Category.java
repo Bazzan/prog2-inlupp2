@@ -21,7 +21,7 @@ public class Category {
 	
 	public void setVisible(boolean v){
 		for (Place p: places){
-			p.setVisible(true);
+			p.setVisible(v);
 		}
 
 	}
