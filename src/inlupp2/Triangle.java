@@ -22,10 +22,8 @@ public class Triangle extends JComponent {
 	@Override
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
-		int x=p.getX();
-		int y=p.getX();
-		int[] xP={x, x+30, x+50};
-		int[] yP={y, y+100, y};
+		int[] xP={0, 20, 40};
+		int[] yP={0, 40, 0};
 		
 		g.setColor(c);
 		//g.fillRect(0,0,getWidth(), getHeight());
