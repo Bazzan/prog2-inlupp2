@@ -11,8 +11,8 @@ public class Triangle extends JComponent {
 		this.p=p;
 		this.c=c;
 		
-		setBounds(p.getX(), p.getY(), 70, 70);
-		Dimension d = new Dimension(70, 70);
+		setBounds((p.getX()-20), p.getY()-40, 40, 40);
+		Dimension d = new Dimension(40, 40);
 		setPreferredSize(d);
 		setMaximumSize(d);
 		setMinimumSize(d);
