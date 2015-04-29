@@ -4,10 +4,12 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
+import javax.swing.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.event.ListSelectionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +19,15 @@ class Main extends JFrame {
     int x = 10;						//testattribut
     int y = 80;
     Color c = Color.BLUE;
-    Category cA = new Category("Kyrkor", Color.CYAN);
+    Category c1 = new Category("Kyrkor", Color.CYAN);
+    Category c2 = new Category("Butiker", Color.BLUE);
+    Category c3 = new Category("Skultpurer", Color.GREEN);
+    Category c4 = new Category("Portaler", Color.RED);
+    Category c5 = new Category("Moskéer", Color.YELLOW);
+    Category c6 = new Category("Skolor", Color.ORANGE);
     ArrayList<Category> catArr= new ArrayList<Category>();
     
-    //Triangle t = new Triangle();	
+    									//slut på testattribut
     JComponent map;
     
     HashMap<String, Place> h = new HashMap<>();
@@ -35,10 +42,14 @@ class Main extends JFrame {
 
 
     Main() {
-    	catArr.add(cA); //testkategori
-    	String[] cats = {"Kyrkor", "Portaler", "Skolor", "Skulpturer", "Moskéer", "Butiker"};
-    	for (int i=0; i<cats.length; i++){
-    		model.add(i, cats[i]);
+    	catArr.add(c1); //testkategorier
+    	catArr.add(c2);
+    	catArr.add(c3);
+    	catArr.add(c4);
+    	catArr.add(c5);
+    	catArr.add(c6);
+    	for (int i=0; i<6; i++){
+    		model.add(i, catArr.get(i).getName());
     	}
 
 
@@ -110,7 +121,10 @@ class Main extends JFrame {
 
         JLabel categories = new JLabel("Categories");
         eastPanel.add(categories);
-
+        categoryList.addListSelectionListener(new ListSelectionListener(){
+        		public void valueChanged(ListSelectionEvent e){
+        			showCategory(categoryList.getSelectedValue());
+        		}});
         JScrollPane cScroll = new JScrollPane(categoryList);
         categoryList.setVisibleRowCount(10);                        //Lista över kategorier
         categoryList.setFixedCellWidth(75);
@@ -177,17 +191,29 @@ class Main extends JFrame {
         		String name;
               	if(type.equals("NamedPlace")){
               		name=JOptionPane.showInputDialog("Namn:");	//skapa ny namedPlace
-              		NamedPlace n = new NamedPlace(name);
-              		h.put(name, n);
-              		h2.put(p, n);
+              		Color c = Color.BLACK;
               		if (categoryList.getSelectedValue()!=null){     //Förutsätter att index är samma för bägge
-              			catArr.get(categoryList.getSelectedIndex()).addPlace(n);
+              			int i=categoryList.getSelectedIndex();
+              			c=catArr.get(i).getColor();
+              			NamedPlace n = new NamedPlace(name, p, c);
+                  		h.put(name, n);
+                  		h2.put(p, n);
+              			catArr.get(i).addPlace(n);
               			System.out.println("Hittade categoryList");
+              			
+              		}	
+              		else{														//Om kategori ej vald
+              			NamedPlace n = new NamedPlace(name, p, c);
+                  		h.put(name, n);
+                  		h2.put(p, n);
               		}
+              		
+              		
               		//Här måste vi lägga in i kategori eller liknande, samt måla upp en triangel
               	}
-              	else if (type.toString().equals("DescribedPlace")){
+              	else if (type.toString().equals("DescribedPlace")){			//Denna och den ovan kan kortas ned
               		JPanel dp = new JPanel();
+              		dp.setLayout(new GridLayout(4,1));
               		JLabel nl = new JLabel("Namn:");
               		JTextField nt = new JTextField(8);
               		JLabel dl = new JLabel("Beskrivning:");
@@ -201,13 +227,30 @@ class Main extends JFrame {
               		
               		if (result == JOptionPane.OK_OPTION){
               			name=nt.getText();
-              			DescribedPlace d = new DescribedPlace(name, dt.getText());
-              			h.put(name, d);
-              			h2.put(p, d);
+              			DescribedPlace d = new DescribedPlace(name, dt.getText(), p, c);
               			if (categoryList.getSelectedValue()!=null){     //Förutsätter att index är samma för bägge
-                  			catArr.get(categoryList.getSelectedIndex()).addPlace(d);
-                  			System.out.println("Hittade categoryList d");
-                  		}
+              				
+              				int i=categoryList.getSelectedIndex();
+                  			c=catArr.get(i).getColor();
+                  			d = new DescribedPlace(name, dt.getText(), p, c);
+
+                  			catArr.get(i).addPlace(d);
+                  			System.out.println("Hittade categoryList");
+                  		}												//om kategori ej vald
+
+                      		h.put(name, d);
+                      		h2.put(p, d);
+                      		d.setVisible(true);
+              			jp.add(d.getTriangle());
+              			Triangle t = new Triangle ();
+              			t.setPos(p);
+              			t.setCol(c);
+              			jp.add(t);
+              			
+              			d.setVisible(true);
+              			jp.validate();
+              			jp.repaint();
+              			
               		}//skapa ny describedPlace
               	}
               	setCursor(Cursor.getDefaultCursor());
@@ -219,14 +262,22 @@ class Main extends JFrame {
 
     }
     
-    public void drawTriangle(int x, int y){
-    	/*Triangle t = new Triangle(x, y);
-    	jp.add(t);
-    	jp.validate();
-    	jp.repaint();
-    	 System.out.println(x + " och " + y);*/
-    	 
+    public void showCategory(String s){
+    	for (int i=0; i<catArr.size(); i++){
+    		if (catArr.get(i).getName().equals(s)){
+    			ArrayList <Place> places = catArr.get(i).getPlaces();
+    	    	for(Place p: places){
+    	    		p.setVisible(true);
+    	    		
+    	    	}
+    	    	break;
+    		}
+    	}
+    	
+    	//Kod för att visa kategorin.
     }
+    
+
 
     class newListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {

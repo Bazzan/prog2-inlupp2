@@ -8,6 +8,7 @@ public class Category {
 	private String name;
 	private Color color;
 	private ArrayList<Place> places = new ArrayList<Place>();
+	private boolean visible=false;
 	
 	public Category(String name, Color color){
 		this.name=name;
@@ -18,7 +19,12 @@ public class Category {
 		places.add(n);
 	}
 	
+	public void setVisible(boolean v){
+		for (Place p: places){
+			p.setVisible(true);
+		}
 
+	}
 	
 	public String getName(){
 		return name;
@@ -26,6 +32,10 @@ public class Category {
 	
 	public Color getColor(){
 		return color;
+	}
+	
+	public ArrayList<Place> getPlaces(){
+		return places;
 	}
 
 }

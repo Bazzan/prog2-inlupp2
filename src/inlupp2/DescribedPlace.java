@@ -1,11 +1,14 @@
 package inlupp2;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class DescribedPlace extends Place{
 	
 	private String description;
 	
-	public DescribedPlace(String name, String description){
-		super(name);
+	public DescribedPlace(String name, String description, Position position, Color c){
+		super(name, position, c);
 		this.description=description;
 	}
 	
