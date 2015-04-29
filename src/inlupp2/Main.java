@@ -17,6 +17,9 @@ class Main extends JFrame {
     int x = 10;                        //testattribut
     int y = 80;
     Color c = Color.BLUE;
+    
+    Triangle t1 = new Triangle (new Position (40, 40), c);
+    
     Category c1 = new Category("Kyrkor", Color.CYAN);
     Category c2 = new Category("Butiker", Color.BLUE);
     Category c3 = new Category("Skultpurer", Color.GREEN);
@@ -36,7 +39,8 @@ class Main extends JFrame {
     ArrayList<Category> categories = new ArrayList<Category>();
     JList<String> categoryList = new JList(model);
 
-    JPanel jp = new JPanel();
+    //JPanel jp = new JPanel();
+    MapImage m;
 
 
     Main() {
@@ -108,7 +112,7 @@ class Main extends JFrame {
         northPanel.add(deletePlaces);
         JButton wihButton = new JButton("What is here?");
         northPanel.add(wihButton);
-
+       
 
         add(northPanel, BorderLayout.NORTH);
 
@@ -147,19 +151,32 @@ class Main extends JFrame {
     }
 
     public void newMap() {        //Öppnar bildfil för ny karta
+    	
+    	
+    	
+    	
         JFileChooser jfc = new JFileChooser("user.dir");
         FileNameExtensionFilter fnef = new FileNameExtensionFilter("Bilder", "jpg", "gif", "png");
         jfc.addChoosableFileFilter(fnef);
 
         int answer = jfc.showOpenDialog(null);
         if (answer == JFileChooser.APPROVE_OPTION) {
+        	
+        	
+        	
             File f = jfc.getSelectedFile();
-            Image img = Toolkit.getDefaultToolkit().getImage(f.getAbsolutePath());
+            
+            m = new MapImage(f);
 
+            /*
             JLabel jl = new JLabel();
+            jl.add(t1);
             jl.setIcon(new ImageIcon(img));
-            jp.add(jl);
-            add(jp, BorderLayout.CENTER);
+            jl.add(t1);
+            
+            jp.add(jl);*/
+            m.setLayout(null);
+            add(m, BorderLayout.CENTER);
             pack();
             setVisible(true);
             setLocationRelativeTo(null);
@@ -169,7 +186,7 @@ class Main extends JFrame {
     public void newPlace(final String type) {
 
         System.out.println(type);
-        jp.addMouseListener(new MouseListener() {
+        m.addMouseListener(new MouseListener() {
             public void mousePressed(MouseEvent e) {
             }
 
@@ -235,24 +252,24 @@ class Main extends JFrame {
                             System.out.println("Hittade categoryList");
                         }                                                //om kategori ej vald
 
-                        jp.setLayout(null);
+                        m.setLayout(null);
                         h.put(name, d);
                         h2.put(p, d);
                         d.setVisible(true);
-                        jp.add(d.getTriangle());
-                        Triangle t = new Triangle();
-                        t.setPos(p);
-                        t.setCol(c);
-                        jp.add(t);
+                        m.add(d.getTriangle());
+                        Triangle t = new Triangle(p, c);
+                       // t.setPos(p);
+                       // t.setCol(c);
+                        m.add(t);
 
                         d.setVisible(true);
-                        jp.validate();
-                        jp.repaint();
+                        m.validate();
+                        m.repaint();
 
                     }//skapa ny describedPlace
                 }
                 setCursor(Cursor.getDefaultCursor());
-                jp.removeMouseListener(this);
+                m.removeMouseListener(this);
             }
         });
 

@@ -13,9 +13,9 @@ public abstract class Place {
 	public Place(String name, Position position, Color c){
 		this.name=name;
 		this.position=position;
-		t = new Triangle();
-		t.setCol(c);
-		t.setPos(position);
+		t = new Triangle(position, c);
+		//t.setCol(c);
+		//t.setPos(position);
 	}
 	
 	public String getName(){
