@@ -7,12 +7,6 @@ public class Triangle extends JComponent {
 	Position p;
 	Color c;
 	boolean visible = true;
-
-	public void isVisible(boolean v){
-		visible = v;
-		validate();
-		repaint();
-	}
 	
 	public Triangle(Position p, Color c){
 		this.p=p;

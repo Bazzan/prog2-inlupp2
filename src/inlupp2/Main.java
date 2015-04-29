@@ -152,6 +152,15 @@ class Main extends JFrame {
 
         JButton deleteC = new JButton("Delete category");
         eastPanel.add(deleteC);
+        deleteC.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int i = categoryList.getSelectedIndex();
+
+//                categoryList.remove(i);
+//                catArr.remove(i);
+            }
+        });
 
         add(eastPanel, BorderLayout.EAST);
         setVisible(true);
