@@ -19,38 +19,23 @@ public class Triangle extends JComponent {
 		setMinimumSize(d);
 		
 	}
+	public void setVisible(boolean b){
+		visible=b;
+	}
 	
+	public boolean getVisible(){
+		return visible;
+	}
 	@Override
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
-
-		int[] xP={0, 20, 40};
-		int[] yP={0, 40, 0};
-
-		/*if (visible) {
+		
+		if (visible){
+			int[] xP={0, 20, 40};
+			int[] yP={0, 40, 0};
 
 			g.setColor(c);
-			//g.fillRect(0,0,getWidth(), getHeight());
 			g.fillPolygon(xP, yP, 3);
-		} else {
-
 		}
-
-		*/
-		g.setColor(c);
-		//g.fillRect(0,0,getWidth(), getHeight());
-		
-		g.fillPolygon(xP, yP, 3);
-	
-
 	}
-	
-	/*public void setPos(Position p){
-		this.p=p;
-	}
-	
-	public void setCol(Color c){
-		this.c=c;
-	}*/
-	
 }

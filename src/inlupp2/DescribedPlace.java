@@ -18,7 +18,7 @@ public class DescribedPlace extends Place{
 	
 	@Override
 	public String toString(){
-		String str=getName() + System.getProperty("line.separator") + description;
+		String str=getName() + "\n" + description;
 		return str;
 		
 	}

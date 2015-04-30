@@ -263,9 +263,9 @@ class Main extends JFrame {
                         h2.put(p, d);
                         d.setVisible(true);
                         m.add(d.getTriangle());
-                        d.setMarked(true);  		//testmarkering
-                        
-                        d.setVisible(true);
+                      
+                        m.add(d);
+
                        
                         for(Position key: h2.keySet()) {
                              DescribedPlace place = h2.get(key); 
@@ -371,19 +371,33 @@ class Main extends JFrame {
         		for (int j=y-7; j<y+7; j++){
 
         			Position pos = new Position(i,j);
-        			System.out.println(pos.getX() + " " + pos.getY());
+        			
         			if (h2.containsKey(pos)){
         				System.out.println("Found key!");
+
         				Place p = h2.get(pos);
+        				if (e.getButton()==MouseEvent.BUTTON1){
+        					if (!p.getMarked()){
+        						p.setMarked(true);
+        					}
+        					else{
+        						p.setMarked(false);
+        					}
+        					
+        				}
+        				else if (e.getButton()==MouseEvent.BUTTON3){
+        					if (!p.getShow()){
+        						p.setShow(true);
+        						p.setVisible(false);
+        					}
+        					else{
+        						p.setShow(false);
+        						p.setVisible(true);}
+        					}
         				
-        				p.setMarked(true);
-        				m.add(p);
+        				
         				validate();
-        				repaint();
-        				
-        				
-        				
-        				
+    					repaint();
         			}
         		}
         	}
