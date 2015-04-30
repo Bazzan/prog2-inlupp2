@@ -17,5 +17,19 @@ public class Position {
 	public int getY(){
 		return y;
 	}
+	
+	@Override
+	public boolean equals(Object other){
+		if (other instanceof Position){
+			Position p = (Position) other;
+			return x == p.x && y == p.y;
+		}
+		else {return false;}
+	}
+	
+	@Override
+	public int hashCode(){
+		return x * 1000 + y;
+	}
 
 }

@@ -12,13 +12,14 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 class Main extends JFrame {
     int x = 10;                        //testattribut
     int y = 80;
-    Color c = Color.BLUE;
+    //Color c = Color.BLUE;
     
-    Triangle t1 = new Triangle (new Position (40, 40), c);
+    //Triangle t1 = new Triangle (new Position (40, 40), c);
     
     Category c1 = new Category("Kyrkor", Color.CYAN);
     Category c2 = new Category("Butiker", Color.BLUE);
@@ -32,12 +33,12 @@ class Main extends JFrame {
     JComponent map;
 
     HashMap<String, Place> h = new HashMap<>();
-    HashMap<Position, Place> h2 = new HashMap<>();
+    HashMap<Position, DescribedPlace> h2 = new HashMap<>();
 
-
-    DefaultListModel model = new DefaultListModel();
+    MapListen mapListen = new MapListen(); 
+    DefaultListModel <String>model = new DefaultListModel<String>();
     ArrayList<Category> categories = new ArrayList<Category>();
-    JList<String> categoryList = new JList(model);
+    JList<String> categoryList = new JList<String>(model);
 
     //JPanel jp = new JPanel();
     MapImage m;
@@ -88,11 +89,12 @@ class Main extends JFrame {
 
         JLabel newLabel = new JLabel("Ny:");                    //Skapa nya ställen. Behöver actionlisteners
         String[] newString = {"NamedPlace", "DescribedPlace"};
-        JComboBox newBox = new JComboBox(newString);
+        JComboBox<String> newBox = new JComboBox<String>(newString);
         newBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent a) {
                 JComboBox comboBox = (JComboBox) a.getSource();
                 Object selected = comboBox.getSelectedItem();
+                
                 newPlace(selected.toString());
 
             }
@@ -156,23 +158,19 @@ class Main extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
-
-//                categoryList.remove(i);
-//                catArr.remove(i);
+                System.out.println(i);
+                model.remove(i);
+                catArr.remove(i);
             }
         });
-
+        
+        
         add(eastPanel, BorderLayout.EAST);
         setVisible(true);
         pack();
-
-
     }
 
     public void newMap() {        //Öppnar bildfil för ny karta
-    	
-    	
-    	
     	
         JFileChooser jfc = new JFileChooser("user.dir");
         FileNameExtensionFilter fnef = new FileNameExtensionFilter("Bilder", "jpg", "gif", "png");
@@ -180,14 +178,13 @@ class Main extends JFrame {
 
         int answer = jfc.showOpenDialog(null);
         if (answer == JFileChooser.APPROVE_OPTION) {
-        	
-        	
-        	
+
             File f = jfc.getSelectedFile();
             
             m = new MapImage(f);
             m.setPreferredSize(new Dimension(m.getWidth(),m.getHeight()));
             m.setLayout(null);
+            m.addMouseListener(mapListen);
             add(m, BorderLayout.CENTER);
             pack();
             setVisible(true);
@@ -196,43 +193,40 @@ class Main extends JFrame {
     }
 
     public void newPlace(final String type) {
-
+    	
+    	m.removeMouseListener(mapListen);
         System.out.println(type);
         m.addMouseListener(new MouseListener() {
-            public void mousePressed(MouseEvent e) {
-            }
+            public void mousePressed(MouseEvent e) {}
 
-            public void mouseReleased(MouseEvent e) {
-            }
+            public void mouseReleased(MouseEvent e) {}
 
-            public void mouseEntered(MouseEvent e) {
-                setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-            }
+            public void mouseEntered(MouseEvent e) {	setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));}
 
-            public void mouseExited(MouseEvent e) {
-                setCursor(Cursor.getDefaultCursor());
-            }
+            public void mouseExited(MouseEvent e) {	setCursor(Cursor.getDefaultCursor());	}
 
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Klickat");              //// Behöver break/cancel
                 Position p = new Position(e.getX(), e.getY());
+                System.out.println(e.getX() + " " +e.getY());
                 String name;
+                Color c = Color.BLACK;
                 if (type.equals("NamedPlace")) {
                     name = JOptionPane.showInputDialog("Namn:");    //skapa ny namedPlace
-                    Color c = Color.BLACK;
+                    
                     if (categoryList.getSelectedValue() != null) {     //Förutsätter att index är samma för bägge
                         int i = categoryList.getSelectedIndex();
                         c = catArr.get(i).getColor();
                         NamedPlace n = new NamedPlace(name, p, c);
                         h.put(name, n);
-                        h2.put(p, n);
+                        //h2.put(p, n);
                         catArr.get(i).addPlace(n);
                         System.out.println("Hittade categoryList");
 
                     } else {                                                        //Om kategori ej vald
                         NamedPlace n = new NamedPlace(name, p, c);
                         h.put(name, n);
-                        h2.put(p, n);
+                       // h2.put(p, n);
                     }
 
 
@@ -269,8 +263,17 @@ class Main extends JFrame {
                         h2.put(p, d);
                         d.setVisible(true);
                         m.add(d.getTriangle());
-
+                        d.setMarked(true);  		//testmarkering
+                        
                         d.setVisible(true);
+                       
+                        for(Position key: h2.keySet()) {
+                             DescribedPlace place = h2.get(key); 
+                             System.out.println(place.getName());
+                             System.out.println(key.getX() + " " + key.getY());
+                       }
+                        
+                        
                         m.validate();
                         m.repaint();
 
@@ -278,6 +281,7 @@ class Main extends JFrame {
                 }
                 setCursor(Cursor.getDefaultCursor());
                 m.removeMouseListener(this);
+                m.addMouseListener(mapListen);
             }
         });
 
@@ -290,7 +294,6 @@ class Main extends JFrame {
                 ArrayList<Place> places = catArr.get(i).getPlaces();
                 for (Place p : places) {
                     p.setVisible(true);
-
                 }
                 break;
             }
@@ -306,13 +309,6 @@ class Main extends JFrame {
         }
     }
 
-
-//    /*---------- PlatsLyssnare -----------------*/
-//    class boxListen implements ActionListener {
-//        public void actionPerformed(ActionEvent a) {
-//
-//        }
-//       }
     
 		/*-------- Kategorilyssnare --------*/
 
@@ -331,7 +327,7 @@ class Main extends JFrame {
 
             JPanel form = new JPanel();
 
-            BorderLayout b = new BorderLayout();
+            //BorderLayout b = new BorderLayout();
             //form.add(p, BorderLayout.NORTH);
             //form.add(c, BorderLayout.SOUTH);
 
@@ -351,6 +347,48 @@ class Main extends JFrame {
             }
         }
     }
+    
+    class MapListen implements MouseListener{
+    	 public void mousePressed(MouseEvent e) {
+         }
+
+         public void mouseReleased(MouseEvent e) {
+         }
+
+         public void mouseEntered(MouseEvent e) {
+            
+         }
+
+         public void mouseExited(MouseEvent e) {
+          
+         }
+
+         public void mouseClicked(MouseEvent e) {
+        	int x=e.getX();
+        	int y=e.getY();
+        	System.out.println("x: " + x + " y: " + y);
+        	for (int i=x-7; i<x+7; i++){
+        		for (int j=y-7; j<y+7; j++){
+
+        			Position pos = new Position(i,j);
+        			System.out.println(pos.getX() + " " + pos.getY());
+        			if (h2.containsKey(pos)){
+        				System.out.println("Found key!");
+        				Place p = h2.get(pos);
+        				
+        				p.setMarked(true);
+        				m.add(p);
+        				validate();
+        				repaint();
+        				
+        				
+        				
+        				
+        			}
+        		}
+        	}
+         }
+     }
 
 
     public static void main(String[] args) {
