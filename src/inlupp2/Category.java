@@ -2,8 +2,9 @@ package inlupp2;
 import java.awt.Color.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.io.*;
 
-public class Category {
+public class Category implements Serializable{
 	
 	private String name;
 	private Color color;

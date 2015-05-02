@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
+
+import java.io.*;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,10 @@ import java.util.Map.Entry;
 import java.util.Iterator;
 import java.util.Collection;
 
-class Main extends JFrame {
+class Main extends JFrame implements Serializable{
+	
+	Boolean change=false; //Om något görs i programmet
+	Boolean named=false;
     
     Category c1 = new Category("Kyrkor", Color.CYAN);
     Category c2 = new Category("Butiker", Color.BLUE);
@@ -52,6 +57,7 @@ class Main extends JFrame {
         catArr.add(c4);
         catArr.add(c5);
         catArr.add(c6);
+        
         for (int i = 0; i < 6; i++) {
             model.add(i, catArr.get(i).getName());
         }
@@ -98,6 +104,7 @@ class Main extends JFrame {
                 	Object selected = comboBox.getSelectedItem();
                 
                 	newPlace(selected.toString());
+                	change=true;
             	}
             	else{
             		JOptionPane.showMessageDialog(null, "Öppna/skapa karta först");
@@ -118,7 +125,7 @@ class Main extends JFrame {
         		String find = searchField.getText();
         		//Här behövs en metod för att plocka ut alla platser som innehåller söksträngen
         		
-        		 
+        		 change=true;
         	}
         });
 
@@ -131,6 +138,7 @@ class Main extends JFrame {
         			Place p = mark.getKey();
         			p.setVisible(false);
         			p.setMarked(false);
+        			change=true;
         		}
         	}
         });
@@ -139,6 +147,54 @@ class Main extends JFrame {
         northPanel.add(deletePlaces);
         JButton wihButton = new JButton("What is here?");
         northPanel.add(wihButton);
+        
+        JButton testOpen = new JButton("Testöppna");				//testa att läsa in fil 
+        northPanel.add(testOpen);
+        testOpen.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		try{
+        			FileInputStream fis = new FileInputStream("test.k");
+        			ObjectInputStream ois = new ObjectInputStream(fis);
+        			catArr=(ArrayList)ois.readObject();
+        			ois.close();
+        		}catch(FileNotFoundException fnfe){
+        			System.err.println("Hittar ej filen");
+        		}catch(ClassNotFoundException cnfe){
+        			System.err.println("Hittar inte klassen");
+        		}catch(IOException ioe){
+        			System.err.println("Read error: " + ioe);
+        		}
+        		
+        		
+        	for (Category c: catArr){
+        		System.out.println(c.toString());
+        		ArrayList<Place> a =c.getPlaces();
+        		for (Place p: a){
+        			System.out.println(a.toString());
+        		}
+        	}
+        	}
+        	
+        });
+        JButton testSave = new JButton("Testspara");				//testa att spara fil
+        northPanel.add(testSave);
+        testSave.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		try{
+        			FileOutputStream fos = new FileOutputStream("test.k");
+        			ObjectOutputStream oos = new ObjectOutputStream(fos);
+        			//oos.writeObject(m);
+        			oos.writeObject(catArr);
+        			//oos.writeObject(stringMap);
+        			//oos.writeObject(positionMap);
+        			//oos.writeObject(markMap);
+        			//oos.close();
+        		}
+        		catch(IOException ioe){
+        			System.err.println("Write error: " + ioe);
+        		}
+        	}
+        });
        
 
         add(northPanel, BorderLayout.NORTH);
@@ -170,6 +226,7 @@ class Main extends JFrame {
                 catArr.get(i).setVisible(false);
                 validate();
                 repaint();
+                change=true;
             }
         });
 
@@ -186,6 +243,7 @@ class Main extends JFrame {
                 System.out.println(i);
                 model.remove(i);
                 catArr.remove(i);
+                change=true;
             }
         });
         
@@ -214,6 +272,7 @@ class Main extends JFrame {
             pack();
             setVisible(true);
             setLocationRelativeTo(null);
+            change=true;
         }
     }
 
@@ -236,6 +295,7 @@ class Main extends JFrame {
                 System.out.println(e.getX() + " " +e.getY());
                 String name;
                 Color c = Color.BLACK;
+                change=true;
                 if (type.equals("NamedPlace")) {
                     name = JOptionPane.showInputDialog("Namn:");    //skapa ny namedPlace
                     
@@ -322,6 +382,7 @@ class Main extends JFrame {
                 }
                 break;
             }
+            change=true;
         }
 
         //Kod för att visa kategorin.
@@ -336,12 +397,27 @@ class Main extends JFrame {
 			p.setMarked(false);
 		}
 		markMap = new HashMap<Boolean, Place>();
+		change=true;
     }
 
     class newListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
             newMap();
         }
+    }
+    
+    //--------- SPARA -------------//
+    
+    public void save(){
+    	
+    	change=false;
+    }
+    
+    //------------ OPEN ------------//
+    
+    public void open(){
+    	
+    	named=true;
     }
 
     
@@ -376,8 +452,9 @@ class Main extends JFrame {
                 Color c = cc.getColor();
 
                 Category cat = new Category(n, c);
-                categories.add(cat);
+                catArr.add(cat);
                 model.add(model.size(), n);
+                change=true;
                 //måste lägga in namnet i listan och koppla till objektet
             }
         }
@@ -401,14 +478,14 @@ class Main extends JFrame {
          public void mouseClicked(MouseEvent e) {
         	int x=e.getX();
         	int y=e.getY();
-        	System.out.println("x: " + x + " y: " + y);
+
         	for (int i=x-7; i<x+7; i++){
         		for (int j=y-7; j<y+7; j++){
 
         			Position pos = new Position(i,j);
         			
         			if (positionMap.containsKey(pos)){
-        				System.out.println("Found key!");
+
 
         				Place p = positionMap.get(pos);
         				if (e.getButton()==MouseEvent.BUTTON1){
@@ -421,6 +498,7 @@ class Main extends JFrame {
         						p.setMarked(false);
         						markMap.remove(p);
         					}
+        					change=true;
         					
         				}
         				else if (e.getButton()==MouseEvent.BUTTON3){
@@ -434,6 +512,7 @@ class Main extends JFrame {
         						p.setVisible(true);
         						
         					}
+        					change=true;
         				}
         				
         				

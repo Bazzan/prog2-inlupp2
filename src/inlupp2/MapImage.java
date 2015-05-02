@@ -3,9 +3,9 @@ package inlupp2;
 import javax.swing.*;
 
 import java.awt.*;
-import java.io.File;
+import java.io.*;
 
-public class MapImage extends JPanel {
+public class MapImage extends JPanel implements Serializable{
 
     private ImageIcon i;
 

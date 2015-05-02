@@ -2,8 +2,9 @@ package inlupp2;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 
-public class DescribedPlace extends Place{
+public class DescribedPlace extends Place implements Serializable{
 	
 	private String description;
 	

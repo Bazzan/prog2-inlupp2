@@ -2,8 +2,9 @@ package inlupp2;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 
-public class Triangle extends JComponent {
+public class Triangle extends JComponent implements Serializable{
 	Position p;
 	Color c;
 	boolean visible = true;

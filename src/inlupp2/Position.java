@@ -1,6 +1,8 @@
 package inlupp2;
 
-public class Position {
+import java.io.*;
+
+public class Position implements Serializable{
 	
 	private int x;
 	private int y;

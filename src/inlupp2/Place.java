@@ -1,10 +1,10 @@
 package inlupp2;
 
 import javax.swing.*;
-
 import java.awt.*;
+import java.io.*;
 
-public abstract class Place extends JComponent{
+public abstract class Place extends JComponent implements Serializable{
 	
 	private String name;
 	private Position position;
