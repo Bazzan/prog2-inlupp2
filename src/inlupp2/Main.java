@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +13,10 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Iterator;
+import java.util.Collection;
 
 class Main extends JFrame {
     
@@ -27,7 +31,7 @@ class Main extends JFrame {
     //slut på testattribut
     JComponent map;
 
-    HashMap<String, Place> stringMap = new HashMap<>();
+    HashMap<Place, String> stringMap = new HashMap<>();
     HashMap<Position, Place> positionMap = new HashMap<>();
     HashMap<Boolean,Place> markMap = new HashMap<Boolean, Place>();
 
@@ -35,6 +39,7 @@ class Main extends JFrame {
     DefaultListModel <String>model = new DefaultListModel<String>();
     ArrayList<Category> categories = new ArrayList<Category>();
     JList<String> categoryList = new JList<String>(model);
+    JTextField searchField = new JTextField("Search", 12); 
 
     //JPanel jp = new JPanel();
     MapImage m=null;
@@ -103,13 +108,32 @@ class Main extends JFrame {
         northPanel.add(newLabel);
         northPanel.add(newBox);
 
-        JTextField searchField = new JTextField("Search", 12);           //Sök efter ställen eller beskrivning, behöver AL
+                  //Sök efter ställen eller beskrivning, behöver AL
         northPanel.add(searchField);
         JButton searchButton = new JButton("Search");
         northPanel.add(searchButton);
+        searchButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		unMark();
+        		String find = searchField.getText();
+        		//Här behövs en metod för att plocka ut alla platser som innehåller söksträngen
+        		
+        		 
+        	}
+        });
 
         JButton hideButton = new JButton("Hide places");
         northPanel.add(hideButton);
+        hideButton.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		unMark();
+        		for(Map.Entry<Place, String> mark : stringMap.entrySet()){			//avmarkera alla platser
+        			Place p = mark.getKey();
+        			p.setVisible(false);
+        			p.setMarked(false);
+        		}
+        	}
+        });
        
         JButton deletePlaces = new JButton("Delete places");
         northPanel.add(deletePlaces);
@@ -219,14 +243,14 @@ class Main extends JFrame {
                         int i = categoryList.getSelectedIndex();
                         c = catArr.get(i).getColor();
                         NamedPlace n = new NamedPlace(name, p, c);
-                        stringMap.put(name, n);
+                        stringMap.put(n, name);
                         positionMap.put(p, n);
                         catArr.get(i).addPlace(n);
                         System.out.println("Hittade categoryList");
 
                     } else {                                                        //Om kategori ej vald
                         NamedPlace n = new NamedPlace(name, p, c);
-                        stringMap.put(name, n);
+                        stringMap.put(n, name);
                         positionMap.put(p, n);
                     }
 
@@ -260,7 +284,7 @@ class Main extends JFrame {
                         }                                                //om kategori ej vald
 
                         m.setLayout(null);
-                        stringMap.put(name, d);
+                        stringMap.put(d, name);
                         positionMap.put(p, d);
                         d.setVisible(true);
                         m.add(d.getTriangle());
@@ -302,7 +326,17 @@ class Main extends JFrame {
 
         //Kod för att visa kategorin.
     }
-
+    
+    //--------Avmarkering -------//
+    
+    public void unMark(){
+    	for(Map.Entry<Boolean, Place> mark : markMap.entrySet()){			//avmarkera alla platser
+			Place p = mark.getValue();
+			p.setVisible(false);
+			p.setMarked(false);
+		}
+		markMap = new HashMap<Boolean, Place>();
+    }
 
     class newListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {
