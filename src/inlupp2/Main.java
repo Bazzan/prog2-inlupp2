@@ -15,11 +15,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 class Main extends JFrame {
-    int x = 10;                        //testattribut
-    int y = 80;
-    //Color c = Color.BLUE;
-    
-    //Triangle t1 = new Triangle (new Position (40, 40), c);
     
     Category c1 = new Category("Kyrkor", Color.CYAN);
     Category c2 = new Category("Butiker", Color.BLUE);
@@ -32,8 +27,9 @@ class Main extends JFrame {
     //slut på testattribut
     JComponent map;
 
-    HashMap<String, Place> h = new HashMap<>();
-    HashMap<Position, DescribedPlace> h2 = new HashMap<>();
+    HashMap<String, Place> stringMap = new HashMap<>();
+    HashMap<Position, Place> positionMap = new HashMap<>();
+    HashMap<Boolean,Place> markMap = new HashMap<Boolean, Place>();
 
     MapListen mapListen = new MapListen(); 
     DefaultListModel <String>model = new DefaultListModel<String>();
@@ -41,7 +37,7 @@ class Main extends JFrame {
     JList<String> categoryList = new JList<String>(model);
 
     //JPanel jp = new JPanel();
-    MapImage m;
+    MapImage m=null;
 
 
     Main() {
@@ -92,11 +88,15 @@ class Main extends JFrame {
         JComboBox<String> newBox = new JComboBox<String>(newString);
         newBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent a) {
-                JComboBox comboBox = (JComboBox) a.getSource();
-                Object selected = comboBox.getSelectedItem();
+            	if(m!=null){
+            		JComboBox comboBox = (JComboBox) a.getSource();
+                	Object selected = comboBox.getSelectedItem();
                 
-                newPlace(selected.toString());
-
+                	newPlace(selected.toString());
+            	}
+            	else{
+            		JOptionPane.showMessageDialog(null, "Öppna/skapa karta först");
+            	}
             }
         });
 
@@ -110,6 +110,7 @@ class Main extends JFrame {
 
         JButton hideButton = new JButton("Hide places");
         northPanel.add(hideButton);
+       
         JButton deletePlaces = new JButton("Delete places");
         northPanel.add(deletePlaces);
         JButton wihButton = new JButton("What is here?");
@@ -218,15 +219,15 @@ class Main extends JFrame {
                         int i = categoryList.getSelectedIndex();
                         c = catArr.get(i).getColor();
                         NamedPlace n = new NamedPlace(name, p, c);
-                        h.put(name, n);
-                        //h2.put(p, n);
+                        stringMap.put(name, n);
+                        positionMap.put(p, n);
                         catArr.get(i).addPlace(n);
                         System.out.println("Hittade categoryList");
 
                     } else {                                                        //Om kategori ej vald
                         NamedPlace n = new NamedPlace(name, p, c);
-                        h.put(name, n);
-                       // h2.put(p, n);
+                        stringMap.put(name, n);
+                        positionMap.put(p, n);
                     }
 
 
@@ -259,16 +260,16 @@ class Main extends JFrame {
                         }                                                //om kategori ej vald
 
                         m.setLayout(null);
-                        h.put(name, d);
-                        h2.put(p, d);
+                        stringMap.put(name, d);
+                        positionMap.put(p, d);
                         d.setVisible(true);
                         m.add(d.getTriangle());
                       
                         m.add(d);
 
                        
-                        for(Position key: h2.keySet()) {
-                             DescribedPlace place = h2.get(key); 
+                        for(Position key: positionMap.keySet()) {
+                             Place place = positionMap.get(key); 
                              System.out.println(place.getName());
                              System.out.println(key.getX() + " " + key.getY());
                        }
@@ -372,16 +373,19 @@ class Main extends JFrame {
 
         			Position pos = new Position(i,j);
         			
-        			if (h2.containsKey(pos)){
+        			if (positionMap.containsKey(pos)){
         				System.out.println("Found key!");
 
-        				Place p = h2.get(pos);
+        				Place p = positionMap.get(pos);
         				if (e.getButton()==MouseEvent.BUTTON1){
         					if (!p.getMarked()){
         						p.setMarked(true);
+        						markMap.put(true, p);
+        						
         					}
         					else{
         						p.setMarked(false);
+        						markMap.remove(p);
         					}
         					
         				}
@@ -389,11 +393,14 @@ class Main extends JFrame {
         					if (!p.getShow()){
         						p.setShow(true);
         						p.setVisible(false);
+        						
         					}
         					else{
         						p.setShow(false);
-        						p.setVisible(true);}
+        						p.setVisible(true);
+        						
         					}
+        				}
         				
         				
         				validate();
