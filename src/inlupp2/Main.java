@@ -120,6 +120,8 @@ class Main extends JFrame implements Serializable {
                 String find = searchField.getText();
                 //Här behövs en metod för att plocka ut alla platser som innehåller söksträngen
 
+
+
                 change = true;
             }
         });
