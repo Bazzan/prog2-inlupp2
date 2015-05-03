@@ -119,9 +119,20 @@ class Main extends JFrame implements Serializable {
                 unMark();
                 String find = searchField.getText();
                 //Här behövs en metod för att plocka ut alla platser som innehåller söksträngen
+                boolean foundResult = false;
 
+                for(Map.Entry<Place, String> me : stringMap.entrySet()) {
+                    if ( find.equals(me.getValue() )) {
+                        Place p = me.getKey();
+                        p.setMarked(true);
+                        markMap.put(true, p);
+                        foundResult = true;
+                    }
+                }
 
-
+                if(!foundResult) {
+                    JOptionPane.showMessageDialog(null,"Det finns inga platser med detta namn!");
+                }
                 change = true;
             }
         });
@@ -417,11 +428,13 @@ class Main extends JFrame implements Serializable {
     public void unMark() {
         for (Map.Entry<Boolean, Place> mark : markMap.entrySet()) {            //avmarkera alla platser
             Place p = mark.getValue();
-            p.setVisible(false);
+//            p.setVisible(false);
             p.setMarked(false);
         }
         markMap = new HashMap<Boolean, Place>();
         change = true;
+        validate();
+        repaint();
     }
 
     class newMapListener implements ActionListener {
