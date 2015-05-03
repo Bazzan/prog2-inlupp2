@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Main extends JFrame implements Serializable {
-
+	
+	File fInUse = new File("");
+	
     Boolean change = false; //Om något görs i programmet
     Boolean named = false;
 
@@ -75,15 +77,27 @@ class Main extends JFrame implements Serializable {
 
 
         JMenuItem openItem = new JMenuItem("Open");
-        newOpenListener openListener = new newOpenListener();
-        openItem.addActionListener(openListener);
+        openItem.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		open();
+        	}
+        });
         archMenu.add(openItem);
 
         JMenuItem saveItem = new JMenuItem("Save");
+        saveItem.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		save();
+        	}
+        });
         archMenu.add(saveItem);
 
         JMenuItem exitProg = new JMenuItem("Exit");
-        exitProg.addActionListener(new ExitListener());
+        exitProg.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		exit();
+        	}
+        });
         archMenu.add(exitProg);
 
 			/* ---------- Panel för skapande och sökande av ställen ------------*/
@@ -482,32 +496,127 @@ class Main extends JFrame implements Serializable {
     //--------- SPARA -------------//
 
     public void save() {
+    	
+    	File fToSave = null;
+    
+    	if(named){
+    		fToSave=fInUse;
+    	}
+    	
+    	else{
+    		JFileChooser jfc = new JFileChooser("user.dir");
+            /*FileNameExtensionFilter fnef = new FileNameExtensionFilter(".krt");
+            jfc.addChoosableFileFilter(fnef);*/
 
+            int answer = jfc.showSaveDialog(this);
+            if (answer == JFileChooser.APPROVE_OPTION) {
+            	
+                fToSave = jfc.getSelectedFile();
+                }
+    		named=true;
+    	}
+    	
+    	try {
+            FileOutputStream fos = new FileOutputStream(fToSave);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(mapImg);
+            oos.writeObject(catArr);
+            //oos.writeObject(stringMap);
+            //oos.writeObject(positionMap);
+            //oos.writeObject(markMap);
+            oos.close();
+            fInUse=fToSave;
+            named=true;
+        } catch (IOException ioe) {
+            System.err.println("Write error: " + ioe);
+        }
+    	
         change = false;
+    	
     }
 
     //------------ OPEN ------------//
 
     public void open() {
-        JFileChooser jfc = new JFileChooser("user.dir");
-        FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta");
-        jfc.addChoosableFileFilter(fnef);
+    	
+    	if(change){
+    		JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
+    		int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_OPTION);
+    		
+    		if (result==JOptionPane.YES_OPTION){
+    			save();
+    		}
+    		
+    	}
+    		
+    	JFileChooser jfc = new JFileChooser("user.dir");
+    	FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta");
+    	jfc.addChoosableFileFilter(fnef);
 
-        int answer = jfc.showOpenDialog(null);
-        if (answer == JFileChooser.APPROVE_OPTION) {
+    	int answer = jfc.showOpenDialog(null);
+    	if (answer == JFileChooser.APPROVE_OPTION) {
 
-            File f = jfc.getSelectedFile();
-            named = true;
+    		File f = jfc.getSelectedFile();
+    		try {
+    			FileInputStream fis = new FileInputStream(f);
+    			ObjectInputStream ois = new ObjectInputStream(fis);
+    			reset();
+   				mapImg = (MapImage) ois.readObject();
+   				paintMap();
+   				catArr=(ArrayList) ois.readObject();
+   				ois.close();
+   				named = true;
+    		} catch (FileNotFoundException fnfe) {
+    			System.err.println("Hittar ej filen");
+    		} catch (ClassNotFoundException cnfe) {
+   				System.err.println("Hittar inte klassen");
+   			} catch (IOException ioe) {
+   				System.err.println("Read error: " + ioe);
+   			}
+    	}
+
+        for (Category c : catArr) {
+            System.out.println(c.toString());
+            ArrayList<Place> a = c.getPlaces();
+            for (Place p : a) {
+                System.out.println(a.toString());
+            }
         }
     }
-
-    class ExitListener implements ActionListener {
-        public void actionPerformed(ActionEvent ave) {
-            System.exit(0);
-        }
+    
+    /*-------------- EXIT ------------*/
+    
+    public void exit(){
+    	if (!change){
+    		System.exit(0);
+    	}
+    	else{
+    		JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
+    		int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
+    		
+    		if (result==JOptionPane.NO_OPTION){
+    			System.exit(0);
+    		}
+    		else if (result==JOptionPane.YES_OPTION){
+    			save();
+    		}
+    		
+    	}
     }
+    
+    /*-------------- RESET -----------*/
 
-
+    public void reset(){
+    	stringMap=null;
+    	markMap=null;
+    	positionMap=null;
+    	catArr=null; 
+    	model=null;
+    	categories=null;
+    	categoryList=null;
+    	change=false;
+    	named=false;
+    } 
     
 		/*-------- Kategorilyssnare --------*/
 
