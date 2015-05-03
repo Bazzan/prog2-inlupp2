@@ -19,7 +19,7 @@ public abstract class Place extends JComponent implements Serializable{
 		this.name=name;
 		this.position=position;
 		t = new Triangle(position, c);
-		t.addMouseListener(new TriangleListener());
+//		t.addMouseListener(new TriangleListener());
 		
 		setBounds((position.getX()) - 20, position.getY() - 40, 150, 150);
 		
@@ -82,46 +82,46 @@ public abstract class Place extends JComponent implements Serializable{
 		return name;
 	}
 
-	class TriangleListener implements MouseListener {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON1) {
-				if (marked) {
-					marked = false;
-				} else {
-					marked = true;
-				}
-				validate();
-				repaint();
-			} else if (e.getButton() == MouseEvent.BUTTON3) {
-				if (show) {
-					show = false;
-				} else {
-					show = true;
-				}
-				validate();
-				repaint();
-			}
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-
-		}
-	}
+//	class TriangleListener implements MouseListener {
+//		@Override
+//		public void mouseClicked(MouseEvent e) {
+//			if (e.getButton() == MouseEvent.BUTTON1) {
+//				if (marked) {
+//					marked = false;
+//				} else {
+//					marked = true;
+//				}
+//				validate();
+//				repaint();
+//			} else if (e.getButton() == MouseEvent.BUTTON3) {
+//				if (show) {
+//					show = false;
+//				} else {
+//					show = true;
+//				}
+//				validate();
+//				repaint();
+//			}
+//		}
+//
+//		@Override
+//		public void mousePressed(MouseEvent e) {
+//
+//		}
+//
+//		@Override
+//		public void mouseReleased(MouseEvent e) {
+//
+//		}
+//
+//		@Override
+//		public void mouseEntered(MouseEvent e) {
+//
+//		}
+//
+//		@Override
+//		public void mouseExited(MouseEvent e) {
+//
+//		}
+//	}
 }
