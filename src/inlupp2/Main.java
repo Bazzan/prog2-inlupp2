@@ -511,8 +511,8 @@ class Main extends JFrame implements Serializable {
             fToSave = fInUse;
         } else {
             JFileChooser jfc = new JFileChooser("user.dir");
-//            FileNameExtensionFilter fnef = new FileNameExtensionFilter(".krt");
-//            jfc.addChoosableFileFilter(fnef);
+           FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta", "krt");
+            jfc.setFileFilter(fnef);
 
             int answer = jfc.showSaveDialog(this);
             if (answer == JFileChooser.APPROVE_OPTION) {
@@ -523,6 +523,10 @@ class Main extends JFrame implements Serializable {
         }
 
         try {
+        	String fileName = fToSave.toString();
+        	if(!fileName.endsWith(".krt") || !fileName.endsWith(".karta")){
+        		fToSave=new File(fileName+=".krt");
+        	}
             FileOutputStream fos = new FileOutputStream(fToSave);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapImg);
@@ -558,13 +562,14 @@ class Main extends JFrame implements Serializable {
 
         reset();
         JFileChooser jfc = new JFileChooser("user.dir");
-        FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta");
-        jfc.addChoosableFileFilter(fnef);
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("karta", "krt");
+        jfc.setFileFilter(fnef);
 
         int answer = jfc.showOpenDialog(null);
         if (answer == JFileChooser.APPROVE_OPTION) {
 
             File f = jfc.getSelectedFile();
+            
             try {
                 FileInputStream fis = new FileInputStream(f);
                 ObjectInputStream ois = new ObjectInputStream(fis);
