@@ -20,6 +20,8 @@ class Main extends JFrame implements Serializable {
 	
     Boolean change = false; //Om något görs i programmet
     Boolean named = false;
+    
+    Category noCat = new Category("Ingen", Color.BLACK);
 
     Category c1 = new Category("Kyrkor", Color.CYAN);
     Category c2 = new Category("Butiker", Color.BLUE);
@@ -45,6 +47,7 @@ class Main extends JFrame implements Serializable {
 
 
     Main() {
+    	catArr.add(noCat);
         catArr.add(c1); //testkategorier
         catArr.add(c2);
         catArr.add(c3);
@@ -323,6 +326,7 @@ class Main extends JFrame implements Serializable {
                         int i = categoryList.getSelectedIndex();
                         c = catArr.get(i).getColor();
                         n = new NamedPlace(name, p, c);
+                        
                         stringMap.put(n, name);
                         positionMap.put(p, n);
                         n.setPlaceVisible(true);
@@ -333,7 +337,7 @@ class Main extends JFrame implements Serializable {
 
 
                     } else {                                                        //Om kategori ej vald
-
+                    	noCat.addPlace(n);
                         stringMap.put(n, name);
                         positionMap.put(p, n);
                     }
@@ -377,9 +381,14 @@ class Main extends JFrame implements Serializable {
                             c = catArr.get(i).getColor();
                             d = new DescribedPlace(name, dt.getText(), p, c);
 
-                            catArr.get(i).addPlace(d);
+                            Category tempC= catArr.get(i);
+                            tempC.addPlace(d);
                             System.out.println("Hittade categoryList");
                         }                                                //om kategori ej vald
+                        
+                        else{
+                        	noCat.addPlace(d);
+                        }
 
                         mapImg.setLayout(null);
                         stringMap.put(d, name);
