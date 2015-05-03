@@ -62,7 +62,7 @@ class Main extends JFrame implements Serializable {
             model.add(i, catArr.get(i).getName());
         }
 
-
+        
 			/* ---------- Arkiv-meny ------------*/
         setLayout(new BorderLayout());
         setSize(850, 500);
@@ -242,8 +242,9 @@ class Main extends JFrame implements Serializable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
-
+                categoryList.clearSelection();
                 catArr.get(i).setVisible(false);
+                
                 validate();
                 repaint();
                 change = true;
@@ -260,7 +261,7 @@ class Main extends JFrame implements Serializable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
-                System.out.println(i);
+
                 model.remove(i);
                 catArr.remove(i);
                 change = true;
@@ -346,7 +347,7 @@ class Main extends JFrame implements Serializable {
     public void newPlace(final String type) {
 
         mapImg.removeMouseListener(mapListen);
-        System.out.println(type);
+       
         mapImg.addMouseListener(new MouseListener() {
             public void mousePressed(MouseEvent e) {
             }
@@ -363,9 +364,9 @@ class Main extends JFrame implements Serializable {
             }
 
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Klickat");              //// Behöver break/cancel
+                             //// Behöver break/cancel
                 Position p = new Position(e.getX(), e.getY());
-                System.out.println(e.getX() + " " + e.getY());
+        
                 String name;
                 Color c = Color.BLACK;
                 change = true;
@@ -386,7 +387,7 @@ class Main extends JFrame implements Serializable {
 
 
                         catArr.get(i).addPlace(n);
-                        System.out.println("Hittade categoryList");
+                      
 
 
                     } else {                                                        //Om kategori ej vald
@@ -436,7 +437,7 @@ class Main extends JFrame implements Serializable {
 
                             Category tempC = catArr.get(i);
                             tempC.addPlace(d);
-                            System.out.println("Hittade categoryList");
+
                         }                                                //om kategori ej vald
 
                         else {
@@ -450,11 +451,6 @@ class Main extends JFrame implements Serializable {
                         mapImg.add(d.getTriangle());
                         mapImg.add(d);
 
-                        for (Position key : positionMap.keySet()) {
-                            Place place = positionMap.get(key);
-                            System.out.println(place.getName());
-                            System.out.println(key.getX() + " " + key.getY());
-                        }
 
                         mapImg.validate();
                         mapImg.repaint();
@@ -464,12 +460,13 @@ class Main extends JFrame implements Serializable {
                 setCursor(Cursor.getDefaultCursor());
                 mapImg.removeMouseListener(this);
                 mapImg.addMouseListener(mapListen);
+                categoryList.clearSelection();
             }
         });
     }
 
     public void showCategory(String s) {
-        for (int i = 0; i < catArr.size(); i++) {
+        for (int i = 1; i < catArr.size()-1; i++) {
             if (catArr.get(i).getName().equals(s)) {
                 ArrayList<Place> places = catArr.get(i).getPlaces();
                 for (Place p : places) {
@@ -477,6 +474,8 @@ class Main extends JFrame implements Serializable {
                 }
                 break;
             }
+            validate();
+            repaint();
             change = true;
         }
 
@@ -581,13 +580,9 @@ class Main extends JFrame implements Serializable {
                 for (Category c : catArr) {
                     model.addElement(c.getName());
 
-                    ArrayList<Place> pA = c.getPlaces();
-                    for (Place p : pA) {
-                        System.out.println(p.getName());
-                    }
                 }
 
-                System.out.println(catArr.size());
+
                 categoryList = new JList<String>(model);
                 paintMap();
                 named = true;
