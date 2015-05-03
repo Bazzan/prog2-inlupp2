@@ -203,7 +203,7 @@ class Main extends JFrame implements Serializable {
         wihButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                mapImg.addMouseListener(new WihListen());
             }
         });
         
@@ -629,7 +629,6 @@ class Main extends JFrame implements Serializable {
         }
 
         public void mouseEntered(MouseEvent e) {
-
         }
 
         public void mouseExited(MouseEvent e) {
@@ -645,7 +644,7 @@ class Main extends JFrame implements Serializable {
 
                     Position pos = new Position(i, j);
 
-                    if (positionMap.containsKey(pos) && positionMap.get(pos).isVisible()) {
+                    if (positionMap.containsKey(pos) && (positionMap.get(pos).isVisible())) {
 
 
                         Place p = positionMap.get(pos);
@@ -679,6 +678,49 @@ class Main extends JFrame implements Serializable {
                     }
                 }
             }
+        }
+    }
+
+    class WihListen implements MouseListener {
+        public void mousePressed(MouseEvent e) {
+        }
+
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        public void mouseEntered(MouseEvent e) {
+            setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        }
+
+        public void mouseExited(MouseEvent e) {
+            setCursor(Cursor.getDefaultCursor());
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+
+            for (int i = x - 7; i < x + 7; i++) {
+                for (int j = y - 7; j < y + 7; j++) {
+
+                    Position pos = new Position(i, j);
+
+                    if (positionMap.containsKey(pos)) {
+
+
+                        Place p = positionMap.get(pos);
+                        if (e.getButton() == MouseEvent.BUTTON1) {
+                            p.setPlaceVisible(true);
+                            change = true;
+                            validate();
+                            repaint();
+                            setCursor(Cursor.getDefaultCursor());
+                            mapImg.removeMouseListener(this);
+                        }
+                    }
+                }
+            }
+
         }
     }
 
