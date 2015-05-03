@@ -4,14 +4,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -235,7 +229,6 @@ class Main extends JFrame implements Serializable {
         eastPanel.add(cScroll); //Lista över kategorier
 
 
-
         JButton hideC = new JButton("Hide category");        //Knappar
         eastPanel.add(hideC);
         hideC.addActionListener(new ActionListener() {
@@ -244,7 +237,7 @@ class Main extends JFrame implements Serializable {
                 int i = categoryList.getSelectedIndex();
                 categoryList.clearSelection();
                 catArr.get(i).setVisible(false);
-                
+
                 validate();
                 repaint();
                 change = true;
@@ -270,48 +263,53 @@ class Main extends JFrame implements Serializable {
 
 
         add(eastPanel, BorderLayout.EAST);
-        addWindowListener(new WindowListener(){
+        addWindowListener(new WindowListener() {
 
 
-			@Override
-			public void windowOpened(WindowEvent e) {	
-			}
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
 
-			@Override
-			public void windowClosing(WindowEvent e) {
-				JFrame frame = (JFrame) e.getSource();
-				if (!change){
-		    		System.exit(0);
-		    	}
-		    	else{
-		    		JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
-		    		int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
-		    		
-		    		if (result==JOptionPane.NO_OPTION){
-		    			System.exit(0);
-		    		}
-		    		else if (result==JOptionPane.YES_OPTION){
-		    			save();
-		    			System.exit(0);
-		    		}
-		    		
-		    	}
-			}
+            @Override
+            public void windowClosing(WindowEvent e) {
+                JFrame frame = (JFrame) e.getSource();
+                if (!change) {
+                    System.exit(0);
+                } else {
+                    JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
+                    int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
 
-			@Override
-			public void windowClosed(WindowEvent e) {}
+                    if (result == JOptionPane.NO_OPTION) {
+                        System.exit(0);
+                    } else if (result == JOptionPane.YES_OPTION) {
+                        save();
+                        System.exit(0);
+                    } else {
+                        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                    }
 
-			@Override
-			public void windowIconified(WindowEvent e) {}
+                }
+            }
 
-			@Override
-			public void windowDeiconified(WindowEvent e) {}
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
 
-			@Override
-			public void windowActivated(WindowEvent e) {}
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
 
-			@Override
-			public void windowDeactivated(WindowEvent e) {}
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
         });
         setVisible(true);
         pack();
@@ -347,7 +345,7 @@ class Main extends JFrame implements Serializable {
     public void newPlace(final String type) {
 
         mapImg.removeMouseListener(mapListen);
-       
+
         mapImg.addMouseListener(new MouseListener() {
             public void mousePressed(MouseEvent e) {
             }
@@ -364,9 +362,9 @@ class Main extends JFrame implements Serializable {
             }
 
             public void mouseClicked(MouseEvent e) {
-                             //// Behöver break/cancel
+                //// Behöver break/cancel
                 Position p = new Position(e.getX(), e.getY());
-        
+
                 String name;
                 Color c = Color.BLACK;
                 change = true;
@@ -387,7 +385,6 @@ class Main extends JFrame implements Serializable {
 
 
                         catArr.get(i).addPlace(n);
-                      
 
 
                     } else {                                                        //Om kategori ej vald
@@ -466,7 +463,7 @@ class Main extends JFrame implements Serializable {
     }
 
     public void showCategory(String s) {
-        for (int i = 1; i < catArr.size()-1; i++) {
+        for (int i = 1; i < catArr.size() - 1; i++) {
             if (catArr.get(i).getName().equals(s)) {
                 ArrayList<Place> places = catArr.get(i).getPlaces();
                 for (Place p : places) {
@@ -511,7 +508,7 @@ class Main extends JFrame implements Serializable {
             fToSave = fInUse;
         } else {
             JFileChooser jfc = new JFileChooser("user.dir");
-           FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta", "krt");
+            FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta", "krt");
             jfc.setFileFilter(fnef);
 
             int answer = jfc.showSaveDialog(this);
@@ -523,10 +520,10 @@ class Main extends JFrame implements Serializable {
         }
 
         try {
-        	String fileName = fToSave.toString();
-        	if(!fileName.endsWith(".krt") || !fileName.endsWith(".karta")){
-        		fToSave=new File(fileName+=".krt");
-        	}
+            String fileName = fToSave.toString();
+            if (!fileName.endsWith(".krt") || !fileName.endsWith(".karta")) {
+                fToSave = new File(fileName += ".krt");
+            }
             FileOutputStream fos = new FileOutputStream(fToSave);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapImg);
@@ -569,7 +566,7 @@ class Main extends JFrame implements Serializable {
         if (answer == JFileChooser.APPROVE_OPTION) {
 
             File f = jfc.getSelectedFile();
-            
+
             try {
                 FileInputStream fis = new FileInputStream(f);
                 ObjectInputStream ois = new ObjectInputStream(fis);
@@ -605,25 +602,24 @@ class Main extends JFrame implements Serializable {
     
     /*-------------- EXIT ------------*/
 
-    
-    public void exit(){
-    	if (!change){
-    		System.exit(0);
-    	}
-    	else{
-    		JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
-    		int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
-    		
-    		if (result==JOptionPane.NO_OPTION){
-    			System.exit(0);
-    		}
-    		else if (result==JOptionPane.YES_OPTION){
-    			save();
-    			System.exit(0);
-    		}
-    		
-    	}
-    	
+
+    public void exit() {
+        if (!change) {
+            System.exit(0);
+        } else {
+            JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
+            int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
+
+            if (result == JOptionPane.NO_OPTION) {
+                System.exit(0);
+            } else if (result == JOptionPane.YES_OPTION) {
+                save();
+                System.exit(0);
+            } else {
+                return;
+            }
+
+        }
 
 
     }
