@@ -4,11 +4,14 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -259,6 +262,49 @@ class Main extends JFrame implements Serializable {
 
 
         add(eastPanel, BorderLayout.EAST);
+        addWindowListener(new WindowListener(){
+
+
+			@Override
+			public void windowOpened(WindowEvent e) {	
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				JFrame frame = (JFrame) e.getSource();
+				if (!change){
+		    		System.exit(0);
+		    	}
+		    	else{
+		    		JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
+		    		int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
+		    		
+		    		if (result==JOptionPane.NO_OPTION){
+		    			System.exit(0);
+		    		}
+		    		else if (result==JOptionPane.YES_OPTION){
+		    			save();
+		    			System.exit(0);
+		    		}
+		    		
+		    	}
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {}
+
+			@Override
+			public void windowIconified(WindowEvent e) {}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+
+			@Override
+			public void windowActivated(WindowEvent e) {}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+        });
         setVisible(true);
         pack();
     }
@@ -568,9 +614,11 @@ class Main extends JFrame implements Serializable {
     		}
     		else if (result==JOptionPane.YES_OPTION){
     			save();
+    			System.exit(0);
     		}
     		
     	}
+    	
     }
     
     /*-------------- RESET -----------*/
