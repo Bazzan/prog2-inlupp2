@@ -76,7 +76,9 @@ public abstract class Place extends JComponent implements Serializable{
 	
 	public boolean getShow(){return show;}
 	
-	public void setMarked(boolean mark){ marked=mark;}
+	public void setMarked(boolean mark){
+		marked=mark;
+	}
 	
 	public boolean getMarked(){ return marked;}
 	@Override

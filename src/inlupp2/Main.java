@@ -32,7 +32,7 @@ class Main extends JFrame implements Serializable {
 
     HashMap<Place, String> stringMap = new HashMap<>();
     HashMap<Position, Place> positionMap = new HashMap<>();
-    HashMap<Boolean, Place> markMap = new HashMap<Boolean, Place>();
+    ArrayList<Place> markMap = new ArrayList<Place>();
 
     MapListen mapListen = new MapListen();
     DefaultListModel<String> model = new DefaultListModel<String>();
@@ -122,10 +122,11 @@ class Main extends JFrame implements Serializable {
                 boolean foundResult = false;
 
                 for(Map.Entry<Place, String> me : stringMap.entrySet()) {
-                    if ( find.equals(me.getValue() )) {
+                    if ( find.equals(me.getValue())) {
                         Place p = me.getKey();
+                        p.setShow(true);
                         p.setMarked(true);
-                        markMap.put(true, p);
+                        markMap.add(p);
                         foundResult = true;
                     }
                 }
@@ -143,11 +144,33 @@ class Main extends JFrame implements Serializable {
             public void actionPerformed(ActionEvent e) {
 
                 for (Map.Entry<Place, String> mark : stringMap.entrySet()) {      //avmarkera alla platser
-                    if(mark.getKey().getMarked()) {
+                    if (mark.getKey().getMarked()) {
                         Place p = mark.getKey();
                         p.setVisible(false);
                         p.setMarked(false);
+                        change = true;
                         markMap.remove(p);
+                    }
+                }
+
+                validate();
+                repaint();
+            }
+        });
+
+        JButton deletePlaces = new JButton("Delete places");
+        northPanel.add(deletePlaces);
+        deletePlaces.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {      //avmarkera alla platser
+                    if (mark.getKey().getMarked()) {
+                        Place p = mark.getKey();
+                        stringMap.remove(p);
+                        positionMap.remove(p);
+                        p.setVisible(false);
+                        markMap.remove(p);
+                        p.setMarked(false);
                         change = true;
                     }
                 }
@@ -156,10 +179,14 @@ class Main extends JFrame implements Serializable {
             }
         });
 
-        JButton deletePlaces = new JButton("Delete places");
-        northPanel.add(deletePlaces);
         JButton wihButton = new JButton("What is here?");
         northPanel.add(wihButton);
+        wihButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         JButton testOpen = new JButton("Testöppna");                //testa att läsa in fil
         northPanel.add(testOpen);
@@ -431,12 +458,10 @@ class Main extends JFrame implements Serializable {
     //--------Avmarkering -------//
 
     public void unMark() {
-        for (Map.Entry<Boolean, Place> mark : markMap.entrySet()) {            //avmarkera alla platser
-            Place p = mark.getValue();
-//            p.setVisible(false);
-            p.setMarked(false);
+        for (Place markedP : markMap) {            //avmarkera alla platser
+            markedP.setMarked(false);
+            markMap.remove(markedP);
         }
-        markMap = new HashMap<Boolean, Place>();
         change = true;
         validate();
         repaint();
@@ -550,7 +575,7 @@ class Main extends JFrame implements Serializable {
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             if (!p.getMarked()) {
                                 p.setMarked(true);
-                                markMap.put(true, p);
+                                markMap.add(p);
 
                             } else {
                                 p.setMarked(false);
