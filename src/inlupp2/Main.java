@@ -141,13 +141,18 @@ class Main extends JFrame implements Serializable {
         northPanel.add(hideButton);
         hideButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                unMark();
-                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {            //avmarkera alla platser
-                    Place p = mark.getKey();
-                    p.setVisible(false);
-                    p.setMarked(false);
-                    change = true;
+
+                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {      //avmarkera alla platser
+                    if(mark.getKey().getMarked()) {
+                        Place p = mark.getKey();
+                        p.setVisible(false);
+                        p.setMarked(false);
+                        markMap.remove(p);
+                        change = true;
+                    }
                 }
+                validate();
+                repaint();
             }
         });
 

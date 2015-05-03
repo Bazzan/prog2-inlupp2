@@ -20,7 +20,7 @@ public abstract class Place extends JComponent implements Serializable{
 		this.position=position;
 		t = new Triangle(position, c);
 
-		setBounds((position.getX()) - 10, position.getY() - 20, 150, 150);
+		setBounds((position.getX()) - 11, position.getY() - 21, 150, 150);
 		
 		Dimension d = new Dimension(140, 140);
 		setPreferredSize(d);
@@ -45,7 +45,7 @@ public abstract class Place extends JComponent implements Serializable{
 		if (marked && !show) {
 
 			g.setColor(Color.RED);
-			g.drawRect(0,0,20, 20);
+			g.drawRect(0,0,22, 22);
 			
 			//g.drawString(name, 10, 10);
 		}
@@ -67,7 +67,10 @@ public abstract class Place extends JComponent implements Serializable{
 	
 	public Triangle getTriangle(){ return t;}
 	
-	public void setVisible(boolean b){ t.setVisible(b);}
+	public void setVisible(boolean b){
+		t.setVisible(b);
+		setShow(false);
+	}
 	
 	public void setShow(boolean b){show=b;}
 	
