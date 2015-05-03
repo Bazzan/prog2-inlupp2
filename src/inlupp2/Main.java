@@ -38,7 +38,6 @@ class Main extends JFrame implements Serializable {
 
     MapListen mapListen = new MapListen();
     DefaultListModel<String> model = new DefaultListModel<String>();
-    ArrayList<Category> categories = new ArrayList<Category>();
     JList<String> categoryList = new JList<String>(model);
     JTextField searchField = new JTextField("Search", 12);
 
@@ -204,57 +203,7 @@ class Main extends JFrame implements Serializable {
 
             }
         });
-
-        JButton testOpen = new JButton("Testöppna");                //testa att läsa in fil
-        northPanel.add(testOpen);
-        testOpen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    FileInputStream fis = new FileInputStream("test.k");
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    mapImg = (MapImage) ois.readObject();
-                    paintMap();
-                    catArr=(ArrayList) ois.readObject();
-                    ois.close();
-                } catch (FileNotFoundException fnfe) {
-                    System.err.println("Hittar ej filen");
-                } catch (ClassNotFoundException cnfe) {
-                    System.err.println("Hittar inte klassen");
-                } catch (IOException ioe) {
-                    System.err.println("Read error: " + ioe);
-                }
-
-
-                for (Category c : catArr) {
-                    System.out.println(c.toString());
-                    ArrayList<Place> a = c.getPlaces();
-                    for (Place p : a) {
-                        System.out.println(a.toString());
-                    }
-                }
-            }
-
-        });
-        JButton testSave = new JButton("Testspara");                //testa att spara fil
-        northPanel.add(testSave);
-        testSave.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    FileOutputStream fos = new FileOutputStream("test.k");
-                    ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    oos.writeObject(mapImg);
-                    oos.writeObject(catArr);
-                    //oos.writeObject(stringMap);
-                    //oos.writeObject(positionMap);
-                    //oos.writeObject(markMap);
-                    oos.close();
-                } catch (IOException ioe) {
-                    System.err.println("Write error: " + ioe);
-                }
-            }
-        });
-
-
+        
         add(northPanel, BorderLayout.NORTH);
 
 			/* ---------- Panel för kategorier ------------*/
@@ -263,8 +212,8 @@ class Main extends JFrame implements Serializable {
 
         eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
 
-        JLabel categories = new JLabel("Categories");
-        eastPanel.add(categories);
+        JLabel catLabel = new JLabel("Categories");
+        eastPanel.add(catLabel);
         categoryList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 showCategory(categoryList.getSelectedValue());
@@ -490,11 +439,7 @@ class Main extends JFrame implements Serializable {
         }
     }
 
-    class newOpenListener implements ActionListener {
-        public void actionPerformed(ActionEvent ave) {
-            open();
-        }
-    }
+
 
     //--------- SPARA -------------//
 
@@ -524,9 +469,10 @@ class Main extends JFrame implements Serializable {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapImg);
             oos.writeObject(catArr);
-            //oos.writeObject(stringMap);
-            //oos.writeObject(positionMap);
-            //oos.writeObject(markMap);
+            oos.writeObject(stringMap);
+            oos.writeObject(positionMap);
+            oos.writeObject(markMap);
+          
             oos.close();
             fInUse=fToSave;
             named=true;
@@ -551,7 +497,8 @@ class Main extends JFrame implements Serializable {
     		}
     		
     	}
-    		
+    	
+    	reset();
     	JFileChooser jfc = new JFileChooser("user.dir");
     	FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta");
     	jfc.addChoosableFileFilter(fnef);
@@ -565,10 +512,27 @@ class Main extends JFrame implements Serializable {
     			ObjectInputStream ois = new ObjectInputStream(fis);
     			reset();
    				mapImg = (MapImage) ois.readObject();
-   				paintMap();
    				catArr=(ArrayList) ois.readObject();
+   				stringMap=(HashMap) ois.readObject();
+   				positionMap=(HashMap) ois.readObject();
+   				markMap=(ArrayList) ois.readObject();
    				ois.close();
+   			   
+                model = new DefaultListModel<String>();
+                for (Category c: catArr){
+                	model.addElement(c.getName());
+                	
+                	ArrayList<Place> pA = c.getPlaces();
+                	for (Place p: pA){
+                		System.out.println(p.getName());
+                	}
+                }
+                
+                System.out.println(catArr.size());
+                categoryList = new JList<String> (model);
+   				paintMap();
    				named = true;
+   				
     		} catch (FileNotFoundException fnfe) {
     			System.err.println("Hittar ej filen");
     		} catch (ClassNotFoundException cnfe) {
@@ -578,13 +542,6 @@ class Main extends JFrame implements Serializable {
    			}
     	}
 
-        for (Category c : catArr) {
-            System.out.println(c.toString());
-            ArrayList<Place> a = c.getPlaces();
-            for (Place p : a) {
-                System.out.println(a.toString());
-            }
-        }
     }
     
     /*-------------- EXIT ------------*/
@@ -615,7 +572,6 @@ class Main extends JFrame implements Serializable {
     	positionMap=null;
     	catArr=null; 
     	model=null;
-    	categories=null;
     	categoryList=null;
     	change=false;
     	named=false;
