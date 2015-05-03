@@ -159,7 +159,7 @@ class Main extends JFrame implements Serializable {
                 for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
                     if (mark.getKey().getMarked()) {
                         Place p = mark.getKey();
-                        p.setVisible(false);
+                        p.setPlaceVisible(false);
                         p.setMarked(false);
                         markMap.remove(p);
                         change = true;
@@ -185,7 +185,7 @@ class Main extends JFrame implements Serializable {
                         markMap.remove(p);
                         if(catArr.contains(p)) { catArr.remove(p);}
                         mapImg.remove(p);
-                        p.setVisible(false);
+                        p.setPlaceVisible(false);
                         p.setMarked(false);
                         change = true;
                     }
@@ -325,7 +325,7 @@ class Main extends JFrame implements Serializable {
                         n = new NamedPlace(name, p, c);
                         stringMap.put(n, name);
                         positionMap.put(p, n);
-                        n.setVisible(true);
+                        n.setPlaceVisible(true);
 
 
                         catArr.get(i).addPlace(n);
@@ -341,7 +341,7 @@ class Main extends JFrame implements Serializable {
                     mapImg.setLayout(null);
                     stringMap.put(n, name);
                     positionMap.put(p, n);
-                    n.setVisible(true);
+                    n.setPlaceVisible(true);
                     mapImg.add(n.getTriangle());
                     mapImg.add(n);
                     mapImg.validate();
@@ -384,7 +384,7 @@ class Main extends JFrame implements Serializable {
                         mapImg.setLayout(null);
                         stringMap.put(d, name);
                         positionMap.put(p, d);
-                        d.setVisible(true);
+                        d.setPlaceVisible(true);
                         mapImg.add(d.getTriangle());
                         mapImg.add(d);
 
@@ -411,7 +411,7 @@ class Main extends JFrame implements Serializable {
             if (catArr.get(i).getName().equals(s)) {
                 ArrayList<Place> places = catArr.get(i).getPlaces();
                 for (Place p : places) {
-                    p.setVisible(true);
+                    p.setPlaceVisible(true);
                 }
                 break;
             }
@@ -636,7 +636,7 @@ class Main extends JFrame implements Serializable {
 
                     Position pos = new Position(i, j);
 
-                    if (positionMap.containsKey(pos)) {
+                    if (positionMap.containsKey(pos) && positionMap.get(pos).isVisible()) {
 
 
                         Place p = positionMap.get(pos);
@@ -654,11 +654,11 @@ class Main extends JFrame implements Serializable {
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (!p.getShow()) {
                                 p.setShow(true);
-                                p.setVisible(false);
+                                p.setPlaceVisible(false);
 
                             } else {
                                 p.setShow(false);
-                                p.setVisible(true);
+                                p.setPlaceVisible(true);
 
                             }
                             change = true;

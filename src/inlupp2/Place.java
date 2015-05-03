@@ -67,7 +67,8 @@ public abstract class Place extends JComponent implements Serializable{
 	
 	public Triangle getTriangle(){ return t;}
 	
-	public void setVisible(boolean b){
+	public void setPlaceVisible(boolean b){
+		setVisible(b);
 		t.setVisible(b);
 		setShow(false);
 	}
