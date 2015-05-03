@@ -13,8 +13,8 @@ public class Triangle extends JComponent implements Serializable{
 		this.p=p;
 		this.c=c;
 		
-		setBounds((p.getX()-20), p.getY()-40, 40, 40);
-		Dimension d = new Dimension(40, 40);
+		setBounds((p.getX()-20), p.getY()-20, 20, 20);
+		Dimension d = new Dimension(20, 20);
 		setPreferredSize(d);
 		setMaximumSize(d);
 		setMinimumSize(d);
@@ -32,8 +32,8 @@ public class Triangle extends JComponent implements Serializable{
 		super.paintComponent(g);
 		
 		if (visible){
-			int[] xP={0, 20, 40};
-			int[] yP={0, 40, 0};
+			int[] xP={0, 10, 20};
+			int[] yP={0, 20, 0};
 
 			g.setColor(c);
 			g.fillPolygon(xP, yP, 3);
