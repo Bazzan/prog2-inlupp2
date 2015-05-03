@@ -18,12 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Main extends JFrame implements Serializable {
-	
-	File fInUse = new File("");
-	
+
+    File fInUse = new File("");
+
     Boolean change = false; //Om något görs i programmet
     Boolean named = false;
-    
+
     Category noCat = new Category("Ingen", Color.BLACK);
 
     Category c1 = new Category("Kyrkor", Color.CYAN);
@@ -50,7 +50,7 @@ class Main extends JFrame implements Serializable {
 
 
     Main() {
-    	catArr.add(noCat);
+        catArr.add(noCat);
         catArr.add(c1); //testkategorier
         catArr.add(c2);
         catArr.add(c3);
@@ -82,26 +82,26 @@ class Main extends JFrame implements Serializable {
 
 
         JMenuItem openItem = new JMenuItem("Open");
-        openItem.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent e){
-        		open();
-        	}
+        openItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                open();
+            }
         });
         archMenu.add(openItem);
 
         JMenuItem saveItem = new JMenuItem("Save");
-        saveItem.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent e){
-        		save();
-        	}
+        saveItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                save();
+            }
         });
         archMenu.add(saveItem);
 
         JMenuItem exitProg = new JMenuItem("Exit");
-        exitProg.addActionListener(new ActionListener(){
-        	public void actionPerformed(ActionEvent e){
-        		exit();
-        	}
+        exitProg.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                exit();
+            }
         });
         archMenu.add(exitProg);
 
@@ -140,8 +140,8 @@ class Main extends JFrame implements Serializable {
                 //Här behövs en metod för att plocka ut alla platser som innehåller söksträngen
                 boolean foundResult = false;
 
-                for(Map.Entry<Place, String> me : stringMap.entrySet()) {
-                    if ( find.equals(me.getValue())) {
+                for (Map.Entry<Place, String> me : stringMap.entrySet()) {
+                    if (find.equals(me.getValue())) {
                         Place p = me.getKey();
                         p.setShow(true);
                         p.setMarked(true);
@@ -150,8 +150,8 @@ class Main extends JFrame implements Serializable {
                     }
                 }
 
-                if(!foundResult) {
-                    JOptionPane.showMessageDialog(null,"Det finns inga platser med detta namn!");
+                if (!foundResult) {
+                    JOptionPane.showMessageDialog(null, "Det finns inga platser med detta namn!");
                 }
                 change = true;
             }
@@ -189,7 +189,9 @@ class Main extends JFrame implements Serializable {
                         stringMap.remove(p);
                         positionMap.remove(p);
                         markMap.remove(p);
-                        if(catArr.contains(p)) { catArr.remove(p);}
+                        if (catArr.contains(p)) {
+                            catArr.remove(p);
+                        }
                         mapImg.remove(p);
                         p.setPlaceVisible(false);
                         p.setMarked(false);
@@ -206,10 +208,14 @@ class Main extends JFrame implements Serializable {
         wihButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mapImg.addMouseListener(new WihListen());
+                if (mapImg != null) {
+                    mapImg.addMouseListener(new WihListen());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Ladda först en karta!");
+                }
             }
         });
-        
+
         add(northPanel, BorderLayout.NORTH);
 
 			/* ---------- Panel för kategorier ------------*/
@@ -227,6 +233,7 @@ class Main extends JFrame implements Serializable {
         });
         JScrollPane cScroll = new JScrollPane(categoryList);
         eastPanel.add(cScroll); //Lista över kategorier
+
 
 
         JButton hideC = new JButton("Hide category");        //Knappar
@@ -317,16 +324,16 @@ class Main extends JFrame implements Serializable {
 
         int answer = jfc.showOpenDialog(null);
         if (answer == JFileChooser.APPROVE_OPTION) {
-        	
+
             File f = jfc.getSelectedFile();
 
             mapImg = new MapImage(f);
             paintMap();
         }
     }
-    
-    public void paintMap(){
-    	mapImg.setPreferredSize(new Dimension(mapImg.getWidth(), mapImg.getHeight()));
+
+    public void paintMap() {
+        mapImg.setPreferredSize(new Dimension(mapImg.getWidth(), mapImg.getHeight()));
         mapImg.setLayout(null);
         mapImg.addMouseListener(mapListen);
         add(mapImg, BorderLayout.CENTER);
@@ -372,7 +379,7 @@ class Main extends JFrame implements Serializable {
                         int i = categoryList.getSelectedIndex();
                         c = catArr.get(i).getColor();
                         n = new NamedPlace(name, p, c);
-                        
+
                         stringMap.put(n, name);
                         positionMap.put(p, n);
                         n.setPlaceVisible(true);
@@ -383,7 +390,7 @@ class Main extends JFrame implements Serializable {
 
 
                     } else {                                                        //Om kategori ej vald
-                    	noCat.addPlace(n);
+                        noCat.addPlace(n);
                         stringMap.put(n, name);
                         positionMap.put(p, n);
                     }
@@ -405,7 +412,7 @@ class Main extends JFrame implements Serializable {
                     JLabel nl = new JLabel("Namn:");
                     JTextField nt = new JTextField();
                     JLabel dl = new JLabel("Beskrivning:");
-                    JTextArea dt = new JTextArea(3,1);
+                    JTextArea dt = new JTextArea(3, 1);
                     JScrollPane sp = new JScrollPane(dt);
                     nl.setAlignmentX(Component.LEFT_ALIGNMENT);
                     nt.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -427,13 +434,13 @@ class Main extends JFrame implements Serializable {
                             c = catArr.get(i).getColor();
                             d = new DescribedPlace(name, dt.getText(), p, c);
 
-                            Category tempC= catArr.get(i);
+                            Category tempC = catArr.get(i);
                             tempC.addPlace(d);
                             System.out.println("Hittade categoryList");
                         }                                                //om kategori ej vald
-                        
-                        else{
-                        	noCat.addPlace(d);
+
+                        else {
+                            noCat.addPlace(d);
                         }
 
                         mapImg.setLayout(null);
@@ -495,31 +502,28 @@ class Main extends JFrame implements Serializable {
     }
 
 
-
     //--------- SPARA -------------//
 
     public void save() {
-    	
-    	File fToSave = null;
-    
-    	if(named){
-    		fToSave=fInUse;
-    	}
-    	
-    	else{
-    		JFileChooser jfc = new JFileChooser("user.dir");
-            /*FileNameExtensionFilter fnef = new FileNameExtensionFilter(".krt");
-            jfc.addChoosableFileFilter(fnef);*/
+
+        File fToSave = null;
+
+        if (named) {
+            fToSave = fInUse;
+        } else {
+            JFileChooser jfc = new JFileChooser("user.dir");
+//            FileNameExtensionFilter fnef = new FileNameExtensionFilter(".krt");
+//            jfc.addChoosableFileFilter(fnef);
 
             int answer = jfc.showSaveDialog(this);
             if (answer == JFileChooser.APPROVE_OPTION) {
-            	
+
                 fToSave = jfc.getSelectedFile();
-                }
-    		named=true;
-    	}
-    	
-    	try {
+            }
+            named = true;
+        }
+
+        try {
             FileOutputStream fos = new FileOutputStream(fToSave);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapImg);
@@ -527,79 +531,80 @@ class Main extends JFrame implements Serializable {
             oos.writeObject(stringMap);
             oos.writeObject(positionMap);
             oos.writeObject(markMap);
-          
+
             oos.close();
-            fInUse=fToSave;
-            named=true;
+            fInUse = fToSave;
+            named = true;
         } catch (IOException ioe) {
             System.err.println("Write error: " + ioe);
         }
-    	
+
         change = false;
-    	
+
     }
 
     //------------ OPEN ------------//
 
     public void open() {
-    	
-    	if(change){
-    		JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
-    		int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_OPTION);
-    		
-    		if (result==JOptionPane.YES_OPTION){
-    			save();
-    		}
-    		
-    	}
-    	
-    	reset();
-    	JFileChooser jfc = new JFileChooser("user.dir");
-    	FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta");
-    	jfc.addChoosableFileFilter(fnef);
 
-    	int answer = jfc.showOpenDialog(null);
-    	if (answer == JFileChooser.APPROVE_OPTION) {
+        if (change) {
+            JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
+            int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_OPTION);
 
-    		File f = jfc.getSelectedFile();
-    		try {
-    			FileInputStream fis = new FileInputStream(f);
-    			ObjectInputStream ois = new ObjectInputStream(fis);
-    			reset();
-   				mapImg = (MapImage) ois.readObject();
-   				catArr=(ArrayList) ois.readObject();
-   				stringMap=(HashMap) ois.readObject();
-   				positionMap=(HashMap) ois.readObject();
-   				markMap=(ArrayList) ois.readObject();
-   				ois.close();
-   			   
+            if (result == JOptionPane.YES_OPTION) {
+                save();
+            }
+
+        }
+
+        reset();
+        JFileChooser jfc = new JFileChooser("user.dir");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("Karta", "karta");
+        jfc.addChoosableFileFilter(fnef);
+
+        int answer = jfc.showOpenDialog(null);
+        if (answer == JFileChooser.APPROVE_OPTION) {
+
+            File f = jfc.getSelectedFile();
+            try {
+                FileInputStream fis = new FileInputStream(f);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                reset();
+                mapImg = (MapImage) ois.readObject();
+                catArr = (ArrayList) ois.readObject();
+                stringMap = (HashMap) ois.readObject();
+                positionMap = (HashMap) ois.readObject();
+                markMap = (ArrayList) ois.readObject();
+                ois.close();
+
                 model = new DefaultListModel<String>();
-                for (Category c: catArr){
-                	model.addElement(c.getName());
-                	
-                	ArrayList<Place> pA = c.getPlaces();
-                	for (Place p: pA){
-                		System.out.println(p.getName());
-                	}
+                for (Category c : catArr) {
+                    model.addElement(c.getName());
+
+                    ArrayList<Place> pA = c.getPlaces();
+                    for (Place p : pA) {
+                        System.out.println(p.getName());
+                    }
                 }
-                
+
                 System.out.println(catArr.size());
-                categoryList = new JList<String> (model);
-   				paintMap();
-   				named = true;
-   				
-    		} catch (FileNotFoundException fnfe) {
-    			System.err.println("Hittar ej filen");
-    		} catch (ClassNotFoundException cnfe) {
-   				System.err.println("Hittar inte klassen");
-   			} catch (IOException ioe) {
-   				System.err.println("Read error: " + ioe);
-   			}
-    	}
+                categoryList = new JList<String>(model);
+                paintMap();
+                named = true;
+
+            } catch (FileNotFoundException fnfe) {
+                System.err.println("Hittar ej filen");
+            } catch (ClassNotFoundException cnfe) {
+                System.err.println("Hittar inte klassen");
+            } catch (IOException ioe) {
+                System.err.println("Read error: " + ioe);
+            }
+        }
 
     }
     
     /*-------------- EXIT ------------*/
+
     
     public void exit(){
     	if (!change){
@@ -619,19 +624,21 @@ class Main extends JFrame implements Serializable {
     		
     	}
     	
+
+
     }
     
     /*-------------- RESET -----------*/
 
-    public void reset(){
-    	stringMap=null;
-    	markMap=null;
-    	positionMap=null;
-    	catArr=null; 
-    	model=null;
-    	categoryList=null;
-    	change=false;
-    	named=false;
+    public void reset() {
+        stringMap = null;
+        markMap = null;
+        positionMap = null;
+        catArr = null;
+        model = null;
+        categoryList = null;
+        change = false;
+        named = false;
     } 
     
 		/*-------- Kategorilyssnare --------*/
