@@ -150,7 +150,9 @@ class Main extends JFrame implements Serializable {
                 try {
                     FileInputStream fis = new FileInputStream("test.k");
                     ObjectInputStream ois = new ObjectInputStream(fis);
-                    catArr = (ArrayList) ois.readObject();
+                    mapImg = (MapImage) ois.readObject();
+                    paintMap();
+                    catArr=(ArrayList) ois.readObject();
                     ois.close();
                 } catch (FileNotFoundException fnfe) {
                     System.err.println("Hittar ej filen");
@@ -178,12 +180,12 @@ class Main extends JFrame implements Serializable {
                 try {
                     FileOutputStream fos = new FileOutputStream("test.k");
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
-                    //oos.writeObject(m);
+                    oos.writeObject(mapImg);
                     oos.writeObject(catArr);
                     //oos.writeObject(stringMap);
                     //oos.writeObject(positionMap);
                     //oos.writeObject(markMap);
-                    //oos.close();
+                    oos.close();
                 } catch (IOException ioe) {
                     System.err.println("Write error: " + ioe);
                 }
@@ -255,19 +257,23 @@ class Main extends JFrame implements Serializable {
 
         int answer = jfc.showOpenDialog(null);
         if (answer == JFileChooser.APPROVE_OPTION) {
-
+        	
             File f = jfc.getSelectedFile();
 
             mapImg = new MapImage(f);
-            mapImg.setPreferredSize(new Dimension(mapImg.getWidth(), mapImg.getHeight()));
-            mapImg.setLayout(null);
-            mapImg.addMouseListener(mapListen);
-            add(mapImg, BorderLayout.CENTER);
-            pack();
-            setVisible(true);
-            setLocationRelativeTo(null);
-            change = true;
+            paintMap();
         }
+    }
+    
+    public void paintMap(){
+    	mapImg.setPreferredSize(new Dimension(mapImg.getWidth(), mapImg.getHeight()));
+        mapImg.setLayout(null);
+        mapImg.addMouseListener(mapListen);
+        add(mapImg, BorderLayout.CENTER);
+        pack();
+        setVisible(true);
+        setLocationRelativeTo(null);
+        change = true;
     }
 
     public void newPlace(final String type) {
@@ -369,16 +375,13 @@ class Main extends JFrame implements Serializable {
                         positionMap.put(p, d);
                         d.setVisible(true);
                         mapImg.add(d.getTriangle());
-
                         mapImg.add(d);
-
 
                         for (Position key : positionMap.keySet()) {
                             Place place = positionMap.get(key);
                             System.out.println(place.getName());
                             System.out.println(key.getX() + " " + key.getY());
                         }
-
 
                         mapImg.validate();
                         mapImg.repaint();
@@ -390,8 +393,6 @@ class Main extends JFrame implements Serializable {
                 mapImg.addMouseListener(mapListen);
             }
         });
-
-
     }
 
     public void showCategory(String s) {
@@ -479,10 +480,6 @@ class Main extends JFrame implements Serializable {
             ccp.add(cc, BorderLayout.WEST);
 
             JPanel form = new JPanel();
-
-            //BorderLayout b = new BorderLayout();
-            //form.add(p, BorderLayout.NORTH);
-            //form.add(c, BorderLayout.SOUTH);
 
             form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
             form.add(p);
