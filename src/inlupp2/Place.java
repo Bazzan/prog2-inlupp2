@@ -45,8 +45,8 @@ public abstract class Place extends JComponent implements Serializable{
 		if (marked && !show) {
 
 			g.setColor(Color.RED);
-			g.drawRect(0,0,22, 22);
-			
+			g.drawRect(0, 0, 22, 22);
+
 			//g.drawString(name, 10, 10);
 		}
 		

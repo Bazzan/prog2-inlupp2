@@ -157,14 +157,15 @@ class Main extends JFrame implements Serializable {
         hideButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {      //avmarkera alla platser
+                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
                     if (mark.getKey().getMarked()) {
                         Place p = mark.getKey();
                         p.setVisible(false);
                         p.setMarked(false);
-                        change = true;
                         markMap.remove(p);
+                        change = true;
                     }
+
                 }
 
                 validate();
@@ -177,13 +178,15 @@ class Main extends JFrame implements Serializable {
         deletePlaces.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {      //avmarkera alla platser
+                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
                     if (mark.getKey().getMarked()) {
                         Place p = mark.getKey();
                         stringMap.remove(p);
                         positionMap.remove(p);
-                        p.setVisible(false);
                         markMap.remove(p);
+                        if(catArr.contains(p)) { catArr.remove(p);}
+                        mapImg.remove(p);
+                        p.setVisible(false);
                         p.setMarked(false);
                         change = true;
                     }

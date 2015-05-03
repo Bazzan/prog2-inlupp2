@@ -19,6 +19,8 @@ public class Category implements Serializable{
 	public void addPlace(Place n){
 		places.add(n);
 	}
+
+	public void removePlace(Place n) { places.remove(n); }
 	
 	public void setVisible(boolean v){
 		for (Place p: places){
