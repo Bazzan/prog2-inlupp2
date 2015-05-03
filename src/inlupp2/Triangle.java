@@ -13,7 +13,7 @@ public class Triangle extends JComponent implements Serializable{
 		this.p=p;
 		this.c=c;
 		
-		setBounds((p.getX()-20), p.getY()-20, 20, 20);
+		setBounds((p.getX()-10), p.getY()-20, 20, 20);
 		Dimension d = new Dimension(20, 20);
 		setPreferredSize(d);
 		setMaximumSize(d);
