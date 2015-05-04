@@ -371,12 +371,9 @@ class Main extends JFrame implements Serializable {
                     name = JOptionPane.showInputDialog("Namn:");    //skapa ny namedPlace
 
                     NamedPlace n = new NamedPlace(name, p, c);
-                    System.out.println(categoryList.getSelectedValue());
-                    System.out.println(categoryList.getSelectedIndex());
                     model.getElementAt(categoryList.getSelectedIndex());
           
                     if (categoryList.getSelectedValue() != null) {     //Förutsätter att index är samma för bägge
-                    	System.out.println("Hittad i kategori");
                         int i = categoryList.getSelectedIndex();
                         c = catArr.get(i).getColor();
                         n = new NamedPlace(name, p, c);
@@ -575,35 +572,21 @@ class Main extends JFrame implements Serializable {
            	File f = jfc.getSelectedFile();
 
             try {
-            	System.out.println("Påbörjar inläsning...");
             	FileInputStream fis = new FileInputStream(f);
             	ObjectInputStream ois = new ObjectInputStream(fis);
-            	System.out.println("Påbörjar reset...");
            		reset();
-           		System.out.println("Påbörjar inläsning av objekten");
        			mapImg = (MapImage) ois.readObject();
        			catArr = (ArrayList) ois.readObject();
             	stringMap = (HashMap) ois.readObject();
            		positionMap = (HashMap) ois.readObject();
       			markMap = (ArrayList) ois.readObject();
-      			System.out.println("Objekt inlästa");
-               
             	ois.close();
-            	
-            	
-            	
-            	System.out.println("Model cleared");
-           		//DefaultListModel <String >model2 = new DefaultListModel<String>();
+
        			for (Category c : catArr) {
-       				System.out.println("Adding category: " + c.getName());
           				model.addElement(c.getName());
        			}
-       			
-       			
-       			
-            	//categoryList = new JList<String>(model);
-           		categoryList.addListSelectionListener(listListen = new ListListener());		//OPEN
-            	System.out.println("Målar karta..");
+
+           		categoryList.addListSelectionListener(listListen = new ListListener());
        			paintMap();
        			
             	named = true;
@@ -685,11 +668,6 @@ class Main extends JFrame implements Serializable {
                 String n = t.getText();
                 Color c = cc.getColor();
                 
-                System.out.println("Kapacitet: " + model.capacity()); //Felsökning
-                for(int i=0; i<model.size(); i++){
-                	System.out.println("Model at "+ i + " " +model.getElementAt(i));
-                	
-                }
                 Category cat = new Category(n, c);
                 catArr.add(cat);
 
@@ -802,8 +780,6 @@ class Main extends JFrame implements Serializable {
     class ListListener implements ListSelectionListener{
         public void valueChanged(ListSelectionEvent e) {
             showCategory(categoryList.getSelectedValue());
-            System.out.println(categoryList.getSelectedIndex());
-            System.out.println(categoryList.getSelectedValue());
         }
     }
 
