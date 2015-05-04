@@ -29,7 +29,6 @@ class Main extends JFrame implements Serializable {
     ArrayList<Category> catArr = new ArrayList<Category>();
 
     //slut på testattribut
-    JComponent map;
 
     HashMap<Place, String> stringMap = new HashMap<>();
     HashMap<Position, Place> positionMap = new HashMap<>();
@@ -137,8 +136,8 @@ class Main extends JFrame implements Serializable {
                 for (Map.Entry<Place, String> me : stringMap.entrySet()) {
                     if (find.equals(me.getValue())) {
                         Place p = me.getKey();
-                        p.setShow(true);
                         p.setMarked(true);
+                        p.setVisible(true);
                         markMap.add(p);
                         foundResult = true;
                     }
@@ -161,6 +160,7 @@ class Main extends JFrame implements Serializable {
                         Place p = mark.getKey();
                         p.setVisible(false);
                         p.setMarked(false);
+                        p.setShow(false);
                         markMap.remove(p);
                         change = true;
                     }
@@ -181,7 +181,7 @@ class Main extends JFrame implements Serializable {
                     if (mark.getKey().getMarked()) {
                         Place p = mark.getKey();
                         stringMap.remove(p);
-                        positionMap.remove(p);
+                        positionMap.remove(p.getPosition());
                         markMap.remove(p);
                         if (catArr.contains(p)) {
                             catArr.remove(p);
@@ -696,10 +696,11 @@ class Main extends JFrame implements Serializable {
 
                     Position pos = new Position(i, j);
 
-                    if (positionMap.containsKey(pos) && (positionMap.get(pos).getTriangle().isVisible())) {
+                    if (positionMap.containsKey(pos) && positionMap.get(pos).getTriangle().getVisible()) {
 
 
                         Place p = positionMap.get(pos);
+
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             if (!p.getMarked()) {
                                 p.setMarked(true);
@@ -766,13 +767,13 @@ class Main extends JFrame implements Serializable {
                             change = true;
                             validate();
                             repaint();
-                            setCursor(Cursor.getDefaultCursor());
-                            mapImg.removeMouseListener(this);
+
                         }
                     }
                 }
             }
-
+            setCursor(Cursor.getDefaultCursor());
+            mapImg.removeMouseListener(this);
         }
     }
 
