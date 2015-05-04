@@ -550,10 +550,12 @@ class Main extends JFrame implements Serializable {
 
         if (change) {
             JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
-            int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
 
             if (result == JOptionPane.YES_OPTION) {
                 save();
+            } else if (result == JOptionPane.CANCEL_OPTION){
+                return;
             }
 
         }
