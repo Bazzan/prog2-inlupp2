@@ -696,7 +696,7 @@ class Main extends JFrame implements Serializable {
 
                     Position pos = new Position(i, j);
 
-                    if (positionMap.containsKey(pos) && positionMap.get(pos).getTriangle().getVisible()) {
+                    if (positionMap.containsKey(pos) && (positionMap.get(pos).getTriangle().getVisible() || positionMap.get(pos).getShow())) {
 
 
                         Place p = positionMap.get(pos);
