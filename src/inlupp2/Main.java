@@ -159,7 +159,7 @@ class Main extends JFrame implements Serializable {
                 for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
                     if (mark.getKey().getMarked()) {
                         Place p = mark.getKey();
-                        p.setPlaceVisible(false);
+                        p.setVisible(false);
                         p.setMarked(false);
                         markMap.remove(p);
                         change = true;
@@ -187,7 +187,7 @@ class Main extends JFrame implements Serializable {
                             catArr.remove(p);
                         }
                         mapImg.remove(p);
-                        p.setPlaceVisible(false);
+                        p.setVisible(false);
                         p.setMarked(false);
                         change = true;
                     }
@@ -381,7 +381,7 @@ class Main extends JFrame implements Serializable {
 
                         stringMap.put(n, name);
                         positionMap.put(p, n);
-                        n.setPlaceVisible(true);
+                        n.setVisible(true);
 
 
                         catArr.get(i).addPlace(n);
@@ -396,7 +396,7 @@ class Main extends JFrame implements Serializable {
                     mapImg.setLayout(null);
                     stringMap.put(n, name);
                     positionMap.put(p, n);
-                    n.setPlaceVisible(true);
+                    n.setVisible(true);
                     mapImg.add(n.getTriangle());
                     mapImg.add(n);
                     mapImg.validate();
@@ -444,7 +444,7 @@ class Main extends JFrame implements Serializable {
                         mapImg.setLayout(null);
                         stringMap.put(d, name);
                         positionMap.put(p, d);
-                        d.setPlaceVisible(true);
+                        d.setVisible(true);
                         mapImg.add(d.getTriangle());
                         mapImg.add(d);
 
@@ -467,7 +467,7 @@ class Main extends JFrame implements Serializable {
             if (catArr.get(i).getName().equals(s)) {
                 ArrayList<Place> places = catArr.get(i).getPlaces();
                 for (Place p : places) {
-                    p.setPlaceVisible(true);
+                    p.setVisible(true);
                 }
                 break;
             }
@@ -515,8 +515,9 @@ class Main extends JFrame implements Serializable {
             if (answer == JFileChooser.APPROVE_OPTION) {
 
                 fToSave = jfc.getSelectedFile();
+
+                named = true;
             }
-            named = true;
         }
 
         try {
@@ -695,7 +696,7 @@ class Main extends JFrame implements Serializable {
 
                     Position pos = new Position(i, j);
 
-                    if (positionMap.containsKey(pos) && (positionMap.get(pos).isVisible())) {
+                    if (positionMap.containsKey(pos) && (positionMap.get(pos).getTriangle().isVisible())) {
 
 
                         Place p = positionMap.get(pos);
@@ -713,11 +714,11 @@ class Main extends JFrame implements Serializable {
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (!p.getShow()) {
                                 p.setShow(true);
-                                p.setPlaceVisible(false);
+                                p.setVisible(false);
 
                             } else {
                                 p.setShow(false);
-                                p.setPlaceVisible(true);
+                                p.setVisible(true);
 
                             }
                             change = true;
@@ -761,7 +762,7 @@ class Main extends JFrame implements Serializable {
 
                         Place p = positionMap.get(pos);
                         if (e.getButton() == MouseEvent.BUTTON1) {
-                            p.setPlaceVisible(true);
+                            p.setVisible(true);
                             change = true;
                             validate();
                             repaint();
