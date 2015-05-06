@@ -183,24 +183,6 @@ class Main extends JFrame implements Serializable {
                 }
                 change = true;
                 markMap.clear();
-
-//                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
-//                    if (mark.getKey().getMarked()) {
-//                        Place p = mark.getKey();
-//                        stringMap.remove(p);
-//                        positionMap.remove(p.getPosition());
-//                        markMap.remove(p);
-//                        if (catArr.contains(p)) {
-//                            catArr.remove(p);
-//                        }
-//                        mapImg.remove(p);
-//                        p.setVisible(false);
-//                        p.setMarked(false);
-//                        change = true;
-//                    }
-//                }
-                validate();
-                repaint();
             }
         });
 
@@ -259,11 +241,11 @@ class Main extends JFrame implements Serializable {
                 int i = categoryList.getSelectedIndex();
                 categoryList.removeListSelectionListener(listListen);
                 Category c = catArr.get(i);
-                for (Place p : c.getPlaces()) {
-                    deletePlace(p);
+                for (int index=0; index< c.getPlaces().size(); index++) {
+                    deletePlace(c.getPlaces().get(index));
                 }
-                model.removeElementAt(i);
                 catArr.remove(i);
+                model.remove(i);
                 categoryList.addListSelectionListener(listListen);
                 change = true;
 
@@ -791,17 +773,19 @@ class Main extends JFrame implements Serializable {
         }
     }
 
-    public void deletePlace(Place p){
+    public void deletePlace(Place p) {
         stringMap.remove(p);
         positionMap.remove(p.getPosition());
-        for (Category c : catArr) {
-            if(c.getPlaces().contains(p)) {
-                c.removePlace(p);
+        for (Category c11 : catArr) {
+            if (c11.getPlaces().contains(p)) {
+                c11.removePlace(p);
             }
         }
         mapImg.remove(p);
         p.setVisible(false);
         p.setMarked(false);
+        validate();
+        repaint();
     }
 
     class ListListener implements ListSelectionListener {
