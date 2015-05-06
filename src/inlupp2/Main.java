@@ -52,8 +52,8 @@ class Main extends JFrame implements Serializable {
         catArr.add(c5);
         catArr.add(c6);
 
-        for (int i = 0; i < 6; i++) {
-            model.add(i, catArr.get(i).getName());
+        for (int i = 0; i < catArr.size(); i++) {
+            model.addElement(catArr.get(i).getName());
         }
 
         
@@ -131,7 +131,6 @@ class Main extends JFrame implements Serializable {
             public void actionPerformed(ActionEvent e) {
                 unMark();
                 String find = searchField.getText();
-                //Här behövs en metod för att plocka ut alla platser som innehåller söksträngen
                 boolean foundResult = false;
 
                 for (Map.Entry<Place, String> me : stringMap.entrySet()) {
@@ -180,18 +179,9 @@ class Main extends JFrame implements Serializable {
             public void actionPerformed(ActionEvent e) {
 
                 for (Place p : markMap) {
-                    stringMap.remove(p);
-                    positionMap.remove(p.getPosition());
-                    for (Category c : catArr) {
-                        if(c.getPlaces().contains(p)) {
-                            c.removePlace(p);
-                        }
-                    }
-                    mapImg.remove(p);
-                    p.setVisible(false);
-                    p.setMarked(false);
-                    change = true;
+                    deletePlace(p);
                 }
+                change = true;
                 markMap.clear();
 
 //                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
@@ -262,13 +252,21 @@ class Main extends JFrame implements Serializable {
 
         JButton deleteC = new JButton("Delete category");
         eastPanel.add(deleteC);
+
         deleteC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
-                model.remove(i);
+                categoryList.removeListSelectionListener(listListen);
+                Category c = catArr.get(i);
+                for (Place p : c.getPlaces()) {
+                    deletePlace(p);
+                }
+                model.removeElementAt(i);
                 catArr.remove(i);
+                categoryList.addListSelectionListener(listListen);
                 change = true;
+
             }
         });
 
@@ -791,6 +789,19 @@ class Main extends JFrame implements Serializable {
             setCursor(Cursor.getDefaultCursor());
             mapImg.removeMouseListener(this);
         }
+    }
+
+    public void deletePlace(Place p){
+        stringMap.remove(p);
+        positionMap.remove(p.getPosition());
+        for (Category c : catArr) {
+            if(c.getPlaces().contains(p)) {
+                c.removePlace(p);
+            }
+        }
+        mapImg.remove(p);
+        p.setVisible(false);
+        p.setMarked(false);
     }
 
     class ListListener implements ListSelectionListener {
