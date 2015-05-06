@@ -179,16 +179,20 @@ class Main extends JFrame implements Serializable {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                for (Place p: markMap) {
+                for (Place p : markMap) {
                     stringMap.remove(p);
                     positionMap.remove(p.getPosition());
-                    catArr.remove(p);
+                    for (Category c : catArr) {
+                        if(c.getPlaces().contains(p)) {
+                            c.removePlace(p);
+                        }
+                    }
                     mapImg.remove(p);
                     p.setVisible(false);
                     p.setMarked(false);
-                    markMap.remove(p);
                     change = true;
                 }
+                markMap.clear();
 
 //                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
 //                    if (mark.getKey().getMarked()) {
@@ -244,13 +248,11 @@ class Main extends JFrame implements Serializable {
         hideC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 int i = categoryList.getSelectedIndex();
                 catArr.get(i).setVisible(false);
                 validate();
                 repaint();
                 change = true;
-
             }
         });
 
@@ -264,7 +266,6 @@ class Main extends JFrame implements Serializable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
-
                 model.remove(i);
                 catArr.remove(i);
                 change = true;
@@ -381,7 +382,7 @@ class Main extends JFrame implements Serializable {
                 change = true;
                 if (type.equals("NamedPlace")) {
                     name = JOptionPane.showInputDialog("Namn:");    //skapa ny namedPlace
-                    if(name != null) {
+                    if (name != null) {
 
                         NamedPlace n = new NamedPlace(name, p, c);
 //                    model.getElementAt(categoryList.getSelectedIndex());
