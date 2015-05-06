@@ -43,7 +43,6 @@ public abstract class Place extends JComponent implements Serializable {
     }
 
     public void setVisible(boolean b) {
-//		setVisible(b);
         t.setVisible(b);
     }
 

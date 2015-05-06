@@ -111,7 +111,7 @@ class Main extends JFrame implements Serializable {
                 if (mapImg != null) {
                     JComboBox comboBox = (JComboBox) a.getSource();
                     Object selected = comboBox.getSelectedItem();
-                    
+
                     newPlace(selected.toString());
                     change = true;
                 } else {
@@ -178,21 +178,33 @@ class Main extends JFrame implements Serializable {
         deletePlaces.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
-                    if (mark.getKey().getMarked()) {
-                        Place p = mark.getKey();
-                        stringMap.remove(p);
-                        positionMap.remove(p.getPosition());
-                        markMap.remove(p);
-                        if (catArr.contains(p)) {
-                            catArr.remove(p);
-                        }
-                        mapImg.remove(p);
-                        p.setVisible(false);
-                        p.setMarked(false);
-                        change = true;
-                    }
+
+                for (Place p: markMap) {
+                    stringMap.remove(p);
+                    positionMap.remove(p.getPosition());
+                    catArr.remove(p);
+                    mapImg.remove(p);
+                    p.setVisible(false);
+                    p.setMarked(false);
+                    markMap.remove(p);
+                    change = true;
                 }
+
+//                for (Map.Entry<Place, String> mark : stringMap.entrySet()) {
+//                    if (mark.getKey().getMarked()) {
+//                        Place p = mark.getKey();
+//                        stringMap.remove(p);
+//                        positionMap.remove(p.getPosition());
+//                        markMap.remove(p);
+//                        if (catArr.contains(p)) {
+//                            catArr.remove(p);
+//                        }
+//                        mapImg.remove(p);
+//                        p.setVisible(false);
+//                        p.setMarked(false);
+//                        change = true;
+//                    }
+//                }
                 validate();
                 repaint();
             }
@@ -221,7 +233,7 @@ class Main extends JFrame implements Serializable {
 
         JLabel catLabel = new JLabel("Categories");
         eastPanel.add(catLabel);
-        
+
         categoryList.addListSelectionListener(listListen);
         JScrollPane cScroll = new JScrollPane(categoryList);
         eastPanel.add(cScroll); //Lista över kategorier
@@ -232,13 +244,13 @@ class Main extends JFrame implements Serializable {
         hideC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int i = categoryList.getSelectedIndex();
-                categoryList.clearSelection();
-                catArr.get(i).setVisible(false);
 
+                int i = categoryList.getSelectedIndex();
+                catArr.get(i).setVisible(false);
                 validate();
                 repaint();
                 change = true;
+
             }
         });
 
@@ -270,7 +282,7 @@ class Main extends JFrame implements Serializable {
 
             @Override
             public void windowClosing(WindowEvent e) {
-            	
+
                 JFrame frame = (JFrame) e.getSource();
                 if (!change) {
                     System.exit(0);
@@ -369,38 +381,35 @@ class Main extends JFrame implements Serializable {
                 change = true;
                 if (type.equals("NamedPlace")) {
                     name = JOptionPane.showInputDialog("Namn:");    //skapa ny namedPlace
+                    if(name != null) {
 
-                    NamedPlace n = new NamedPlace(name, p, c);
-                    model.getElementAt(categoryList.getSelectedIndex());
-          
-                    if (categoryList.getSelectedValue() != null) {     //Förutsätter att index är samma för bägge
-                        int i = categoryList.getSelectedIndex();
-                        c = catArr.get(i).getColor();
-                        n = new NamedPlace(name, p, c);
+                        NamedPlace n = new NamedPlace(name, p, c);
+//                    model.getElementAt(categoryList.getSelectedIndex());
 
+                        if (categoryList.getSelectedValue() != null) {     //Förutsätter att index är samma för bägge
+                            int i = categoryList.getSelectedIndex();
+                            c = catArr.get(i).getColor();
+                            n = new NamedPlace(name, p, c);
+
+                            n.setVisible(true);
+
+
+                            catArr.get(i).addPlace(n);
+
+
+                        } else {                                                        //Om kategori ej vald
+                            noCat.addPlace(n);
+                        }
+
+                        mapImg.setLayout(null);
                         stringMap.put(n, name);
                         positionMap.put(p, n);
                         n.setVisible(true);
-
-
-                        catArr.get(i).addPlace(n);
-
-
-                    } else {                                                        //Om kategori ej vald
-                        noCat.addPlace(n);
-                        stringMap.put(n, name);
-                        positionMap.put(p, n);
+                        mapImg.add(n.getTriangle());
+                        mapImg.add(n);
+                        mapImg.validate();
+                        mapImg.repaint();
                     }
-
-                    mapImg.setLayout(null);
-                    stringMap.put(n, name);
-                    positionMap.put(p, n);
-                    n.setVisible(true);
-                    mapImg.add(n.getTriangle());
-                    mapImg.add(n);
-                    mapImg.validate();
-                    mapImg.repaint();
-
 
                     //Här måste vi lägga in i kategori eller liknande, samt måla upp en triangel
                 } else if (type.toString().equals("DescribedPlace")) {            //Denna och den ovan kan kortas ned
@@ -446,8 +455,6 @@ class Main extends JFrame implements Serializable {
                         d.setVisible(true);
                         mapImg.add(d.getTriangle());
                         mapImg.add(d);
-
-
                         mapImg.validate();
                         mapImg.repaint();
 
@@ -457,27 +464,29 @@ class Main extends JFrame implements Serializable {
                 mapImg.removeMouseListener(this);
                 mapImg.addMouseListener(mapListen);
                 categoryList.setSelectedIndex(-1);
-             
+
             }
         });
     }
 
-    public void showCategory(String s) {
-        for (int i = 1; i < catArr.size() - 1; i++) {
-            if (catArr.get(i).getName().equals(s)) {
-                ArrayList<Place> places = catArr.get(i).getPlaces();
-                for (Place p : places) {
-                    p.setVisible(true);
-                }
-                break;
-            }
-            validate();
-            repaint();
-            change = true;
+    public void showCategory(Category c) {
+        for (Place p : c.getPlaces()) {
+            p.setVisible(true);
         }
-
-        //Kod för att visa kategorin.
+//            if (c.getName().equals(s)) {
+//                ArrayList<Place> places = catArr.get(i).getPlaces();
+//                for (Place p : places) {
+//                    p.setVisible(true);
+//                }
+//                break;
+//            }
+        validate();
+        repaint();
+        change = true;
     }
+
+    //Kod för att visa kategorin.
+
 
     //--------Avmarkering -------//
 
@@ -501,8 +510,8 @@ class Main extends JFrame implements Serializable {
     //--------- SPARA -------------//
 
     public void save() {
-    	
-    	mapImg.removeMouseListener(mapListen);
+
+        mapImg.removeMouseListener(mapListen);
         File fToSave = null;
 
         if (named) {
@@ -526,6 +535,7 @@ class Main extends JFrame implements Serializable {
             if (!fileName.endsWith(".krt") || !fileName.endsWith(".karta")) {
                 fToSave = new File(fileName += ".krt");
             }
+
             FileOutputStream fos = new FileOutputStream(fToSave);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mapImg);
@@ -540,7 +550,7 @@ class Main extends JFrame implements Serializable {
         } catch (IOException ioe) {
             System.err.println("Write error: " + ioe);
         }
-        
+
         change = false;
         mapImg.addMouseListener(mapListen);
 
@@ -549,57 +559,58 @@ class Main extends JFrame implements Serializable {
     //------------ OPEN ------------//
 
     public void open() {
-    	
-    	int result=0;
+
+        int result = 0;
         if (change) {
             JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
             result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_OPTION);
-            
-            	if (result == JOptionPane.YES_OPTION) {
-            	save();
-            	}
-            	else{ return; }
+
+            if (result == JOptionPane.YES_OPTION) {
+                save();
+            } else {
+                return;
+            }
         }
-            	
-        
-       JFileChooser jfc = new JFileChooser("user.dir");
-       FileNameExtensionFilter fnef = new FileNameExtensionFilter("karta", "krt");
-       jfc.setFileFilter(fnef);
 
-       int answer = jfc.showOpenDialog(null);
-       if (answer == JFileChooser.APPROVE_OPTION) {
 
-           	File f = jfc.getSelectedFile();
+        JFileChooser jfc = new JFileChooser("user.dir");
+        FileNameExtensionFilter fnef = new FileNameExtensionFilter("karta", "krt");
+        jfc.setFileFilter(fnef);
+
+        int answer = jfc.showOpenDialog(null);
+        if (answer == JFileChooser.APPROVE_OPTION) {
+
+            File f = jfc.getSelectedFile();
 
             try {
-            	FileInputStream fis = new FileInputStream(f);
-            	ObjectInputStream ois = new ObjectInputStream(fis);
-           		reset();
-       			mapImg = (MapImage) ois.readObject();
-       			catArr = (ArrayList) ois.readObject();
-            	stringMap = (HashMap) ois.readObject();
-           		positionMap = (HashMap) ois.readObject();
-      			markMap = (ArrayList) ois.readObject();
-            	ois.close();
+                FileInputStream fis = new FileInputStream(f);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                reset();
+                mapImg = (MapImage) ois.readObject();
+                catArr = (ArrayList) ois.readObject();
+                stringMap = (HashMap) ois.readObject();
+                positionMap = (HashMap) ois.readObject();
+                markMap = (ArrayList) ois.readObject();
+                ois.close();
 
-       			for (Category c : catArr) {
-          				model.addElement(c.getName());
-       			}
+                for (Category c : catArr) {
+                    model.addElement(c.getName());
+                }
 
-           		categoryList.addListSelectionListener(listListen = new ListListener());
-       			paintMap();
-       			
-            	named = true;
+                categoryList.addListSelectionListener(listListen = new ListListener());
+                paintMap();
 
-            	} catch (FileNotFoundException fnfe) {
-            			System.err.println("Hittar ej filen");
-            	} catch (ClassNotFoundException cnfe) {
-            			System.err.println("Hittar inte klassen");
-            	} catch (IOException ioe) {
-            			System.err.println("Read error: " + ioe);
-            	}
-         }
-        
+                named = true;
+
+            } catch (FileNotFoundException fnfe) {
+                System.err.println("Hittar ej filen");
+            } catch (ClassNotFoundException cnfe) {
+                System.err.println("Hittar inte klassen");
+            } catch (IOException ioe) {
+                System.err.println("Read error: " + ioe);
+            }
+        }
+
     }
     
     /*-------------- EXIT ------------*/
@@ -630,15 +641,15 @@ class Main extends JFrame implements Serializable {
         markMap = null;
         positionMap = null;
         catArr = null;
-        
+
         categoryList.clearSelection();
-    	
-    	model.clear();
+
+        model.clear();
         //categoryList = null;															////////	RESET
         //categoryList.removeListSelectionListener(listListen);
         change = false;
         named = false;
-        
+
     } 
     
 		/*-------- Kategorilyssnare --------*/
@@ -661,33 +672,37 @@ class Main extends JFrame implements Serializable {
             form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
             form.add(p);
             form.add(ccp);
-            
+
             int answer = JOptionPane.showConfirmDialog(null, form, "New category", JOptionPane.OK_CANCEL_OPTION);
             if (answer == JOptionPane.YES_OPTION) {
-            	
+
                 String n = t.getText();
                 Color c = cc.getColor();
-                
+
                 Category cat = new Category(n, c);
                 catArr.add(cat);
 
                 model.addElement(n);
-                
+
                 categoryList.setSelectedIndex(-1);
-                change=true;
+                change = true;
                 //måste lägga in namnet i listan och koppla till objektet
             }
         }
     }
 
     class MapListen implements MouseListener {
-        public void mousePressed(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {
+        }
 
-        public void mouseReleased(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {
+        }
 
-        public void mouseEntered(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {
+        }
 
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {
+        }
 
         public void mouseClicked(MouseEvent e) {
             int x = e.getX();
@@ -776,10 +791,14 @@ class Main extends JFrame implements Serializable {
             mapImg.removeMouseListener(this);
         }
     }
-    
-    class ListListener implements ListSelectionListener{
+
+    class ListListener implements ListSelectionListener {
         public void valueChanged(ListSelectionEvent e) {
-            showCategory(categoryList.getSelectedValue());
+            int i = categoryList.getSelectedIndex();
+            Category c = catArr.get(i);
+            c.setVisible(true);
+            validate();
+            repaint();
         }
     }
 
