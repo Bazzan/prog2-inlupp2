@@ -242,6 +242,10 @@ class Main extends JFrame implements Serializable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
+                if (i == 0) {
+                    JOptionPane.showMessageDialog(null, "Får inte radera kategori 'Ingen'!");
+                    return;
+                }
                 categoryList.removeListSelectionListener(listListen);
                 Category c = catArr.get(i);
                 for (int index = (c.getPlaces().size() - 1); index >= 0; index--) {
@@ -598,11 +602,11 @@ class Main extends JFrame implements Serializable {
             try {
                 FileInputStream fis = new FileInputStream(f);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                
-                if (needReset){
-                reset();
-                remove(mapImg);
+
                 categoryList.removeListSelectionListener(listListen);
+                if (needReset){
+                    reset();
+                    remove(mapImg);
                 }
                 mapImg = (MapImage) ois.readObject();
                 catArr = (ArrayList) ois.readObject();
@@ -611,7 +615,7 @@ class Main extends JFrame implements Serializable {
                 markMap = (ArrayList) ois.readObject();
                 ois.close();
 
-                
+                model.clear();
                 for (Category c : catArr) {
                     model.addElement(c.getName());
                 }
@@ -629,6 +633,8 @@ class Main extends JFrame implements Serializable {
             } catch (IOException ioe) {
                 System.err.println("Read error: " + ioe);
             }
+            validate();
+            repaint();
         }
 
     }
