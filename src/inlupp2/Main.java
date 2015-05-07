@@ -345,9 +345,19 @@ class Main extends JFrame implements Serializable {
             
             if (change){
             	remove(mapImg);
+            	 categoryList.removeListSelectionListener(listListen);
+                 
+            	reset();
+            	categoryList.addListSelectionListener(listListen = new ListListener());
+                model.clear();
+                stringMap = new HashMap<Place, String>();
+                positionMap = new HashMap<Position, Place>();
+                markMap = new ArrayList<Place>();
+                noCat=new Category("Ingen", Color.BLACK);
+                model.addElement(noCat.toString());
             	mapImg.removeMouseListener(mapListen);
             }
-            
+            named=false;
             mapImg = new MapImage(f);
             validate();
             repaint();
@@ -631,7 +641,7 @@ class Main extends JFrame implements Serializable {
                 for (Category c : catArr) {
                     model.addElement(c.getName());
                 }
-
+                
                 categoryList.addListSelectionListener(listListen = new ListListener());
                
                 paintMap();
