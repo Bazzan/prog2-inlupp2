@@ -572,7 +572,9 @@ class Main extends JFrame implements Serializable {
     public void open() {
 
         int result = 0;
+        boolean needReset=false;
         if (change) {
+        	needReset=true;
             JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
             result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -596,8 +598,12 @@ class Main extends JFrame implements Serializable {
             try {
                 FileInputStream fis = new FileInputStream(f);
                 ObjectInputStream ois = new ObjectInputStream(fis);
+                
+                if (needReset){
                 reset();
                 remove(mapImg);
+                categoryList.removeListSelectionListener(listListen);
+                }
                 mapImg = (MapImage) ois.readObject();
                 catArr = (ArrayList) ois.readObject();
                 stringMap = (HashMap) ois.readObject();
@@ -605,7 +611,7 @@ class Main extends JFrame implements Serializable {
                 markMap = (ArrayList) ois.readObject();
                 ois.close();
 
-                categoryList.removeListSelectionListener(listListen);
+                
                 for (Category c : catArr) {
                     model.addElement(c.getName());
                 }
