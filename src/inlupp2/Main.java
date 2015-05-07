@@ -44,6 +44,7 @@ class Main extends JFrame implements Serializable {
 
 
     Main() {
+
         catArr.add(noCat);
         catArr.add(c1); //testkategorier
         catArr.add(c2);
@@ -70,6 +71,8 @@ class Main extends JFrame implements Serializable {
         mbar.add(archMenu);
 
         JMenuItem newMap = new JMenuItem("New map"); //Öppna bildfil
+
+
         newMapListener newMapListener = new newMapListener();
         newMap.addActionListener(newMapListener);
         archMenu.add(newMap);
@@ -241,14 +244,18 @@ class Main extends JFrame implements Serializable {
                 int i = categoryList.getSelectedIndex();
                 categoryList.removeListSelectionListener(listListen);
                 Category c = catArr.get(i);
-                for (int index=0; index< c.getPlaces().size(); index++) {
+                for (int index = (c.getPlaces().size() - 1); index >= 0; index--) {
                     deletePlace(c.getPlaces().get(index));
                 }
+                System.out.println(model.getSize());
+                System.out.println(i);
                 catArr.remove(i);
                 model.remove(i);
+                System.out.println(model.getSize());
                 categoryList.addListSelectionListener(listListen);
                 change = true;
-
+                validate();
+                repaint();
             }
         });
 
@@ -308,7 +315,12 @@ class Main extends JFrame implements Serializable {
     }
 
     public void newMap() {        //Öppnar bildfil för ny karta
-
+        if (mapImg != null) {
+            mapImg.removeMouseListener(mapListen);
+            mapImg = null;
+            validate();
+            repaint();
+        }
         JFileChooser jfc = new JFileChooser("user.dir");
         FileNameExtensionFilter fnef = new FileNameExtensionFilter("Bilder", "jpg", "gif", "png");
         jfc.addChoosableFileFilter(fnef);
@@ -317,16 +329,17 @@ class Main extends JFrame implements Serializable {
         if (answer == JFileChooser.APPROVE_OPTION) {
 
             File f = jfc.getSelectedFile();
-
             mapImg = new MapImage(f);
             paintMap();
         }
     }
 
     public void paintMap() {
+
         mapImg.setPreferredSize(new Dimension(mapImg.getWidth(), mapImg.getHeight()));
         mapImg.setLayout(null);
         mapImg.addMouseListener(mapListen);
+
         add(mapImg, BorderLayout.CENTER);
         pack();
         setVisible(true);
@@ -491,7 +504,7 @@ class Main extends JFrame implements Serializable {
     //--------- SPARA -------------//
 
     public void save() {
-
+        categoryList.removeListSelectionListener(listListen);
         mapImg.removeMouseListener(mapListen);
         File fToSave = null;
 
@@ -513,7 +526,8 @@ class Main extends JFrame implements Serializable {
 
         try {
             String fileName = fToSave.toString();
-            if (!fileName.endsWith(".krt") || !fileName.endsWith(".karta")) {
+            System.out.println(fileName);
+            if (!fileName.endsWith(".krt")) {
                 fToSave = new File(fileName += ".krt");
             }
 
@@ -534,7 +548,7 @@ class Main extends JFrame implements Serializable {
 
         change = false;
         mapImg.addMouseListener(mapListen);
-
+        categoryList.addListSelectionListener(listListen);
     }
 
     //------------ OPEN ------------//
@@ -544,11 +558,11 @@ class Main extends JFrame implements Serializable {
         int result = 0;
         if (change) {
             JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
-            result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_OPTION);
+            result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
 
             if (result == JOptionPane.YES_OPTION) {
                 save();
-            } else {
+            } else if (result == JOptionPane.CANCEL_OPTION) {
                 return;
             }
         }
@@ -574,6 +588,7 @@ class Main extends JFrame implements Serializable {
                 markMap = (ArrayList) ois.readObject();
                 ois.close();
 
+                categoryList.removeListSelectionListener(listListen);
                 for (Category c : catArr) {
                     model.addElement(c.getName());
                 }
@@ -623,9 +638,10 @@ class Main extends JFrame implements Serializable {
         positionMap = null;
         catArr = null;
 
+        categoryList.removeListSelectionListener(listListen);
         categoryList.clearSelection();
-
         model.clear();
+        categoryList.addListSelectionListener(listListen);
         //categoryList = null;															////////	RESET
         //categoryList.removeListSelectionListener(listListen);
         change = false;

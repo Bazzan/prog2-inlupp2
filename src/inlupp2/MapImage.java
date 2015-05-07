@@ -7,24 +7,23 @@ import java.io.*;
 
 public class MapImage extends JPanel implements Serializable{
 
-    private ImageIcon i;
+    private ImageIcon imgIcn;
 
     public MapImage(File f) {
-    	
-    	i = new ImageIcon(f.getAbsolutePath());
-     
+        imgIcn = null;
+        imgIcn = new ImageIcon(f.getAbsolutePath());
     }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(i.getImage(), 0, 0, this);
+        g.drawImage(imgIcn.getImage(), 0, 0, this);
     }
 
     public int getWidth() {
-        return i.getImage().getWidth(null);
+        return imgIcn.getImage().getWidth(null);
     }
 
     public int getHeight() {
-        return i.getImage().getHeight(null);
+        return imgIcn.getImage().getHeight(null);
     }
 }
