@@ -141,6 +141,7 @@ class Main extends JFrame implements Serializable {
                         Place p = me.getKey();
                         p.setMarked(true);
                         p.setVisible(true);
+                        p.setShow(false);
                         markMap.add(p);
                         foundResult = true;
                     }
@@ -507,8 +508,8 @@ class Main extends JFrame implements Serializable {
     public void unMark() {
         for (Place markedP : markMap) {            //avmarkera alla platser
             markedP.setMarked(false);
-            markMap.remove(markedP);
         }
+        markMap.clear();
         change = true;
         validate();
         repaint();
