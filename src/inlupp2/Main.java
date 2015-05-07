@@ -316,10 +316,18 @@ class Main extends JFrame implements Serializable {
 
     public void newMap() {        //Öppnar bildfil för ny karta
         if (mapImg != null) {
-            mapImg.removeMouseListener(mapListen);
-            mapImg = null;
-            validate();
-            repaint();
+        	 int result = 0;
+             if (change) {
+                 JLabel changeMsg = new JLabel("Ändringar har gjorts. Vill du spara dessa förändringar?");
+                 result = JOptionPane.showConfirmDialog(null, changeMsg, "Varning", JOptionPane.YES_NO_CANCEL_OPTION);
+
+                 if (result == JOptionPane.YES_OPTION) {
+                     save();
+                 } else if (result == JOptionPane.CANCEL_OPTION) {
+                     return;
+                 }
+             }
+           
         }
         JFileChooser jfc = new JFileChooser("user.dir");
         FileNameExtensionFilter fnef = new FileNameExtensionFilter("Bilder", "jpg", "gif", "png");
@@ -329,7 +337,15 @@ class Main extends JFrame implements Serializable {
         if (answer == JFileChooser.APPROVE_OPTION) {
 
             File f = jfc.getSelectedFile();
+            
+            if (change){
+            	remove(mapImg);
+            	mapImg.removeMouseListener(mapListen);
+            }
+            
             mapImg = new MapImage(f);
+            validate();
+            repaint();
             paintMap();
         }
     }
@@ -405,7 +421,7 @@ class Main extends JFrame implements Serializable {
                         mapImg.repaint();
                     }
 
-                    //Här måste vi lägga in i kategori eller liknande, samt måla upp en triangel
+                    
                 } else if (type.toString().equals("DescribedPlace")) {            //Denna och den ovan kan kortas ned
                     JPanel dp = new JPanel();
                     dp.setLayout(new BoxLayout(dp, BoxLayout.Y_AXIS));
@@ -581,6 +597,7 @@ class Main extends JFrame implements Serializable {
                 FileInputStream fis = new FileInputStream(f);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 reset();
+                remove(mapImg);
                 mapImg = (MapImage) ois.readObject();
                 catArr = (ArrayList) ois.readObject();
                 stringMap = (HashMap) ois.readObject();
@@ -594,6 +611,7 @@ class Main extends JFrame implements Serializable {
                 }
 
                 categoryList.addListSelectionListener(listListen = new ListListener());
+               
                 paintMap();
 
                 named = true;
@@ -637,7 +655,7 @@ class Main extends JFrame implements Serializable {
         markMap = null;
         positionMap = null;
         catArr = null;
-
+       // mapImg=null;
         categoryList.removeListSelectionListener(listListen);
         categoryList.clearSelection();
         model.clear();
