@@ -410,7 +410,7 @@ class Main extends JFrame implements Serializable {
 
 
                             catArr.get(i).addPlace(n);
-
+                           
 
                         } else {                                                        //Om kategori ej vald
                             noCat.addPlace(n);
@@ -424,8 +424,9 @@ class Main extends JFrame implements Serializable {
                         mapImg.add(n);
                         mapImg.validate();
                         mapImg.repaint();
+                       
                     }
-
+                  
                     
                 } else if (type.toString().equals("DescribedPlace")) {            //Denna och den ovan kan kortas ned
                     JPanel dp = new JPanel();
@@ -479,6 +480,7 @@ class Main extends JFrame implements Serializable {
                 mapImg.removeMouseListener(this);
                 mapImg.addMouseListener(mapListen);
                 categoryList.setSelectedIndex(-1);
+                
 
             }
         });
@@ -525,8 +527,7 @@ class Main extends JFrame implements Serializable {
     //--------- SPARA -------------//
 
     public void save() {
-        categoryList.removeListSelectionListener(listListen);
-        mapImg.removeMouseListener(mapListen);
+        
         File fToSave = null;
 
         if (named) {
@@ -540,20 +541,26 @@ class Main extends JFrame implements Serializable {
             if (answer == JFileChooser.APPROVE_OPTION) {
 
                 fToSave = jfc.getSelectedFile();
-
                 named = true;
             }
-        }
+        }        
 
         try {
             String fileName = fToSave.toString();
-            System.out.println(fileName);
+
             if (!fileName.endsWith(".krt")) {
                 fToSave = new File(fileName += ".krt");
             }
 
-            FileOutputStream fos = new FileOutputStream(fToSave);
+            categoryList.removeListSelectionListener(listListen);
+            mapImg.removeMouseListener(mapListen);
+           
+            FileOutputStream fos = new FileOutputStream(fToSave, false);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
+            for (Category c: catArr){
+            	System.out.println(c.getName());
+            }
+           
             oos.writeObject(mapImg);
             oos.writeObject(catArr);
             oos.writeObject(stringMap);
@@ -563,6 +570,7 @@ class Main extends JFrame implements Serializable {
             oos.close();
             fInUse = fToSave;
             named = true;
+            System.out.println("Saved");
         } catch (IOException ioe) {
             System.err.println("Write error: " + ioe);
         }
@@ -605,9 +613,12 @@ class Main extends JFrame implements Serializable {
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
                 categoryList.removeListSelectionListener(listListen);
+                
                 if (needReset){
                     reset();
+                    
                     remove(mapImg);
+                    
                 }
                 mapImg = (MapImage) ois.readObject();
                 catArr = (ArrayList) ois.readObject();
@@ -624,6 +635,7 @@ class Main extends JFrame implements Serializable {
                 categoryList.addListSelectionListener(listListen = new ListListener());
                
                 paintMap();
+                fInUse=f;
 
                 named = true;
 
@@ -672,7 +684,8 @@ class Main extends JFrame implements Serializable {
         categoryList.removeListSelectionListener(listListen);
         categoryList.clearSelection();
         model.clear();
-        categoryList.addListSelectionListener(listListen);
+        mapImg.removeMouseListener(mapListen);
+        //categoryList.addListSelectionListener(listListen);
         //categoryList = null;															////////	RESET
         //categoryList.removeListSelectionListener(listListen);
         change = false;
