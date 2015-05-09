@@ -345,23 +345,25 @@ class Main extends JFrame implements Serializable {
             
             if (change){
             	remove(mapImg);
-            	 categoryList.removeListSelectionListener(listListen);
+            	categoryList.removeListSelectionListener(listListen);
                  
             	reset();
-            	categoryList.addListSelectionListener(listListen = new ListListener());
+            	catArr=new ArrayList<Category>();
                 model.clear();
                 stringMap = new HashMap<Place, String>();
                 positionMap = new HashMap<Position, Place>();
                 markMap = new ArrayList<Place>();
                 noCat=new Category("Ingen", Color.BLACK);
-                model.addElement(noCat.toString());
+                model.addElement(noCat.getName());
             	mapImg.removeMouseListener(mapListen);
+            	categoryList.addListSelectionListener(listListen = new ListListener());
             }
             named=false;
             mapImg = new MapImage(f);
+            paintMap();
             validate();
             repaint();
-            paintMap();
+            
         }
     }
 
