@@ -252,11 +252,8 @@ class Main extends JFrame implements Serializable {
                 for (int index = (c.getPlaces().size() - 1); index >= 0; index--) {
                     deletePlace(c.getPlaces().get(index));
                 }
-                System.out.println(model.getSize());
-                System.out.println(i);
                 catArr.remove(i);
                 model.remove(i);
-                System.out.println(model.getSize());
                 categoryList.addListSelectionListener(listListen);
                 change = true;
                 validate();
@@ -569,9 +566,6 @@ class Main extends JFrame implements Serializable {
            
             FileOutputStream fos = new FileOutputStream(fToSave, false);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            for (Category c: catArr){
-            	System.out.println(c.getName());
-            }
            
             oos.writeObject(mapImg);
             oos.writeObject(catArr);
@@ -582,7 +576,6 @@ class Main extends JFrame implements Serializable {
             oos.close();
             fInUse = fToSave;
             named = true;
-            System.out.println("Saved");
         } catch (IOException ioe) {
             System.err.println("Write error: " + ioe);
         }
@@ -595,6 +588,8 @@ class Main extends JFrame implements Serializable {
     //------------ OPEN ------------//
 
     public void open() {
+
+
 
         int result = 0;
         boolean needReset=false;
@@ -619,6 +614,10 @@ class Main extends JFrame implements Serializable {
         if (answer == JFileChooser.APPROVE_OPTION) {
 
             File f = jfc.getSelectedFile();
+
+            if (!change && fInUse.getAbsolutePath().equals(f.getAbsolutePath())) {
+                return;
+            }
 
             try {
                 FileInputStream fis = new FileInputStream(f);
