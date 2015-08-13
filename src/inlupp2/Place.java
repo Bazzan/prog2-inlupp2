@@ -43,17 +43,20 @@ public abstract class Place extends JComponent implements Serializable {
     }
 
     public void setVisible(boolean b) {
-        if (b) {
-            if (!getShow() && !t.getVisible()) {
-                t.setVisible(b);
-            } else if (getShow() && !t.getVisible()) {
-                t.setVisible(b);
-                setShow(false);
-            }
-        } else {
+        
             t.setVisible(b);
-//            setShow(false);
-        }
+       
+    }
+    
+    
+    public void showPlace(){
+    	t.setVisible(true);
+    }
+    
+    public void hidePlace(){
+    	t.setVisible(false);
+    	show=false;
+    	marked=false;
     }
 
     public void setShow(boolean b) {

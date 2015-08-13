@@ -26,8 +26,14 @@ public class Category implements Serializable {
 
     public void setVisible(boolean v) {
         for (Place p : places) {
-            if (!p.getShow()) {
-                p.setVisible(v);
+            if (!v){
+            	p.hidePlace();
+            }
+            
+            else{
+            	if(!p.getShow()){
+            		p.showPlace();
+            	}
             }
 
         }
