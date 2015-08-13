@@ -16,19 +16,10 @@ class Main extends JFrame implements Serializable {
     File fInUse = new File("");
 
     Boolean change = false; //Om något görs i programmet
-    Boolean named = false;
+    Boolean named = false;	//För sparande-check 
 
     Category noCat = new Category("Ingen", Color.BLACK);
-
-    Category c1 = new Category("Kyrkor", Color.CYAN);
-    Category c2 = new Category("Butiker", Color.BLUE);
-    Category c3 = new Category("Skultpurer", Color.GREEN);
-    Category c4 = new Category("Portaler", Color.RED);
-    Category c5 = new Category("Moskéer", Color.YELLOW);
-    Category c6 = new Category("Skolor", Color.ORANGE);
     ArrayList<Category> catArr = new ArrayList<Category>();
-
-    //slut på testattribut
 
     HashMap<Place, String> stringMap = new HashMap<>();
     HashMap<Position, Place> positionMap = new HashMap<>();
@@ -46,16 +37,8 @@ class Main extends JFrame implements Serializable {
     Main() {
 
         catArr.add(noCat);
-        catArr.add(c1); //testkategorier
-        catArr.add(c2);
-        catArr.add(c3);
-        catArr.add(c4);
-        catArr.add(c5);
-        catArr.add(c6);
-
-        for (int i = 0; i < catArr.size(); i++) {
-            model.addElement(catArr.get(i).getName());
-        }
+        model.addElement(noCat.getName());
+        
 
         
 			/* ---------- Arkiv-meny ------------*/
@@ -106,7 +89,7 @@ class Main extends JFrame implements Serializable {
 
         JPanel northPanel = new JPanel();
 
-        JLabel newLabel = new JLabel("Ny:");                    //Skapa nya ställen. Behöver actionlisteners
+        JLabel newLabel = new JLabel("Ny:");                    //Skapa nya ställen. 
         String[] newString = {"NamedPlace", "DescribedPlace"};
         JComboBox<String> newBox = new JComboBox<String>(newString);
         newBox.addActionListener(new ActionListener() {
@@ -126,7 +109,7 @@ class Main extends JFrame implements Serializable {
         northPanel.add(newLabel);
         northPanel.add(newBox);
 
-        //Sök efter ställen eller beskrivning, behöver AL
+        //Sök efter ställen eller beskrivning
         northPanel.add(searchField);
         JButton searchButton = new JButton("Search");
         northPanel.add(searchButton);
@@ -225,10 +208,13 @@ class Main extends JFrame implements Serializable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
-                catArr.get(i).setVisible(false);
-                validate();
-                repaint();
-                change = true;
+                if (i!=0){
+                	catArr.get(i).setVisible(false);
+                	validate();
+                	repaint();
+                	change = true;
+                }
+                
             }
         });
 
@@ -244,7 +230,7 @@ class Main extends JFrame implements Serializable {
             public void actionPerformed(ActionEvent e) {
                 int i = categoryList.getSelectedIndex();
                 if (i == 0) {
-                    JOptionPane.showMessageDialog(null, "Får inte radera kategori 'Ingen'!");
+                    JOptionPane.showMessageDialog(null, "Kategorilösa platser raderas individuellt");
                     return;
                 }
                 categoryList.removeListSelectionListener(listListen);
@@ -315,8 +301,11 @@ class Main extends JFrame implements Serializable {
         setVisible(true);
         pack();
     }
+    
+    
+    //---------------------- Öppna bildfil för ny karta ---------------------//
 
-    public void newMap() {        //Öppnar bildfil för ny karta
+    public void newMap() {        
         if (mapImg != null) {
         	 int result = 0;
              if (change) {
@@ -363,6 +352,8 @@ class Main extends JFrame implements Serializable {
             
         }
     }
+    
+  //---------------------- Måla om fönstret vid ny karta  ---------------------//
 
     public void paintMap() {
 
@@ -376,6 +367,9 @@ class Main extends JFrame implements Serializable {
         setLocationRelativeTo(null);
         change = true;
     }
+    
+    
+  //---------------------- Skapa ny plats ---------------------//
 
     public void newPlace(final String type) {
 
@@ -408,7 +402,6 @@ class Main extends JFrame implements Serializable {
                     if (name != null) {
 
                         NamedPlace n = new NamedPlace(name, p, c);
-//                    model.getElementAt(categoryList.getSelectedIndex());
 
                         if (categoryList.getSelectedValue() != null) {     //Förutsätter att index är samma för bägge
                             int i = categoryList.getSelectedIndex();
@@ -420,7 +413,6 @@ class Main extends JFrame implements Serializable {
 
                             catArr.get(i).addPlace(n);
                            
-
                         } else {                                                        //Om kategori ej vald
                             noCat.addPlace(n);
                         }
@@ -434,10 +426,9 @@ class Main extends JFrame implements Serializable {
                         mapImg.validate();
                         mapImg.repaint();
                        
-                    }
-                  
+                    }                 
                     
-                } else if (type.toString().equals("DescribedPlace")) {            //Denna och den ovan kan kortas ned
+                } else if (type.toString().equals("DescribedPlace")) {           
                     JPanel dp = new JPanel();
                     dp.setLayout(new BoxLayout(dp, BoxLayout.Y_AXIS));
                     JLabel nl = new JLabel("Namn:");
@@ -499,20 +490,11 @@ class Main extends JFrame implements Serializable {
         for (Place p : c.getPlaces()) {
             p.setVisible(true);
         }
-//            if (c.getName().equals(s)) {
-//                ArrayList<Place> places = catArr.get(i).getPlaces();
-//                for (Place p : places) {
-//                    p.setVisible(true);
-//                }
-//                break;
-//            }
+
         validate();
         repaint();
         change = true;
     }
-
-    //Kod för att visa kategorin.
-
 
     //--------Avmarkering -------//
 
@@ -525,6 +507,8 @@ class Main extends JFrame implements Serializable {
         validate();
         repaint();
     }
+    
+  //---------------------- Kartlyssnare ---------------------//
 
     class newMapListener implements ActionListener {
         public void actionPerformed(ActionEvent a) {

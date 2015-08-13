@@ -2,7 +2,6 @@ package inlupp2;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class DescribedPlace extends Place implements Serializable {
 
