@@ -480,7 +480,7 @@ class Main extends JFrame implements Serializable {
                 setCursor(Cursor.getDefaultCursor());
                 mapImg.removeMouseListener(this);
                 mapImg.addMouseListener(mapListen);
-                categoryList.clearSelection();
+                categoryList.setSelectedIndex(-1);
                 
 
             }
