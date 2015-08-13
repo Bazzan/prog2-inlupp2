@@ -100,6 +100,7 @@ class Main extends JFrame implements Serializable {
 
                     newPlace(selected.toString());
                     change = true;
+                    
                 } else {
                     JOptionPane.showMessageDialog(null, "Öppna/skapa karta först");
                 }
@@ -479,7 +480,7 @@ class Main extends JFrame implements Serializable {
                 setCursor(Cursor.getDefaultCursor());
                 mapImg.removeMouseListener(this);
                 mapImg.addMouseListener(mapListen);
-                categoryList.setSelectedIndex(-1);
+                categoryList.clearSelection();
                 
 
             }
